@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Time - Đăng nhập</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+        .logo {
+            font-size: 64px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+        .title {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-size: 20px;
+            width: 160px;
+            text-align: left;
+        }
+        .input-wrapper {
+            position: relative;
+            width: 300px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 18px;
+            border: 2px solid #000000;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666666;
+            font-size: 18px;
+        }
+        .btn-login {
+            margin-top: 15px;
+            padding: 8px 30px;
+            font-size: 18px;
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-login:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .error-message {
+            color: #ff0000;
+            font-size: 16px;
+            margin-top: 20px;
+            height: 24px;
+            font-weight: 500;
+        }
+        .footer-text {
+            font-size: 16px;
+            margin-top: 35px;
+            color: #333333;
+        }
+        .footer-text a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: bold;
+        }
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo">TRAINING TIME</div>
+        <div class="title">Đăng nhập</div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Tên đăng nhập:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="username" required autocomplete="username">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Mật khẩu:</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" required autocomplete="current-password">
+                    <i class="fa-solid fa-eye toggle-password" id="eyeIcon"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">Đăng nhập</button>
+            <div class="error-message" id="errorMsg"></div>
+        </form>
+        
+        <div class="footer-text">Chưa có tài khoản? <a href="register.html">Đăng ký</a></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        eyeIcon.addEventListener('click', function() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+            
+            errorMsg.style.color = "#0000ff"; 
+            errorMsg.innerText = "Đang xác thực tài khoản...";
+
+            const hashPassword = CryptoJS.MD5(pass).toString();
+            const callbackName = 'jsonp_callback_login_' + Math.round(100000 * Math.random());
+
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                document.getElementById(callbackName).remove();
+
+                if (data.status === "success") {
+                    errorMsg.style.color = "#008000"; 
+                    errorMsg.innerText = "Đăng nhập thành công! Đang chuyển hướng...";
+                    
+                    setTimeout(() => {
+                        // TẤT CẢ ĐỀU VỀ INDEX.HTML, mang theo thông tin user và role
+                        window.location.href = `index.html?user=${encodeURIComponent(user)}&role=${data.role}`;
+                    }, 1200);
+                } else {
+                    errorMsg.style.color = "#ff0000";
+                    errorMsg.innerText = "Tài khoản hoặc mật khẩu không đúng";
+                }
+            };
+
+            const script = document.createElement('script');
+            script.src = `${CONFIG.WEB_APP_URL}?action=login&username=${encodeURIComponent(user)}&password=${hashPassword}&callback=${callbackName}`;
+            script.id = callbackName;
+            
+            script.onerror = function() {
+                errorMsg.style.color = "#ff0000";
+                errorMsg.innerText = "Lỗi hệ thống hoặc chưa cấu hình đúng URL Database.";
+                delete window[callbackName];
+            };
+
+            document.body.appendChild(script);
+        });
+    </script>
+</body>
+</html>
