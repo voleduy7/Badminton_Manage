@@ -150,7 +150,7 @@
         .card-footer {
             padding: 15px;
             text-align: center;
-            min-height: 35px; /* Giữ khung cố định kể cả khi không có nút bấm */
+            min-height: 35px;
         }
         .btn-register-course {
             width: 90%;
@@ -218,21 +218,17 @@
         
         let allLocalClasses = [];
 
-        // Kiểm tra trạng thái đăng nhập
         if (loggedUser) {
             let userHtml = `
                 <div class="user-container">
                     <span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>
             `;
-            
-            // Nếu tài khoản là Huấn luyện viên, hiển thị nút điều hướng quản lý
             if (userRole === 'coach') {
                 userHtml += `
                     <button class="btn-open-class" onclick="goToDashboardHLV()">Mở lớp</button>
                     <button class="btn-open-class" style="background-color: #3b82f6;" onclick="goToManageClasses()">Lớp của tôi</button>
                 `;
             }
-            
             userHtml += `
                     <button class="btn-logout" onclick="logoutUser()">Đăng xuất</button>
                 </div>
@@ -275,53 +271,62 @@
             document.body.appendChild(script);
         }
 
+        // Tạo cấu trúc HTML cho một thẻ card đơn lẻ
+        function createCardTemplate(cls) {
+            let isFull = false;
+            if (cls.slots && cls.slots.includes('/')) {
+                const parts = cls.slots.split('/');
+                const current = parseInt(parts[0], 10);
+                const max = parseInt(parts[1], 10);
+                if (current >= max) {
+                    isFull = true;
+                }
+            }
+
+            let buttonHtml = '';
+            if (userRole === 'coach') {
+                buttonHtml = ''; // HLV ẩn nút chi tiết lớp
+            } else {
+                if (isFull) {
+                    buttonHtml = `<button class="btn-register-course" style="background-color: #e5e7eb; color: #9ca3af; border-color: #d1d5db; cursor: not-allowed;" disabled>Lớp đã full</button>`;
+                } else {
+                    buttonHtml = `<button class="btn-register-course" onclick="handleCourseClick('${cls.id}', '${encodeURIComponent(cls.className)}', '${cls.slots}')">Đăng ký</button>`;
+                }
+            }
+
+            return `
+                <div class="card-header">${cls.className}</div>
+                <div class="card-body">
+                    Khu vực: ${cls.area}<br>
+                    Trình độ: ${cls.level}<br>
+                    Học phí: ${cls.fee}<br>
+                    Số lượng: <span>${cls.slots}</span><br>
+                    HLV: ${cls.coach}
+                </div>
+                <div class="card-footer">
+                    ${buttonHtml}
+                </div>
+            `;
+        }
+
+        // Vẽ toàn bộ danh sách lớp học khi load trang
         function renderClasses(classesList) {
             coursesContainer.innerHTML = "";
             classesList.forEach(cls => {
                 const card = document.createElement('div');
                 card.className = 'course-card';
-                card.id = `card_${cls.id}`; // Gán ID cho thẻ card để dễ target cập nhật sau này
-                
-                // Phân tích logic kiểm tra lớp đầy
-                let isFull = false;
-                if (cls.slots && cls.slots.includes('/')) {
-                    const parts = cls.slots.split('/');
-                    const current = parseInt(parts[0], 10);
-                    const max = parseInt(parts[1], 10);
-                    if (current >= max) {
-                        isFull = true;
-                    }
-                }
-
-                // Xử lý nút bấm theo vai trò
-                let buttonHtml = '';
-                if (userRole === 'coach') {
-                    // YÊU CẦU MỚI: Huấn luyện viên đăng nhập thì BỎ LUÔN NÚT CHI TIẾT LỚP
-                    buttonHtml = ''; 
-                } else {
-                    // Đối với Học viên hoặc khách chưa đăng nhập
-                    if (isFull) {
-                        buttonHtml = `<button class="btn-register-course" style="background-color: #e5e7eb; color: #9ca3af; border-color: #d1d5db; cursor: not-allowed;" disabled>Lớp đã full</button>`;
-                    } else {
-                        buttonHtml = `<button class="btn-register-course" onclick="handleCourseClick('${cls.id}', '${encodeURIComponent(cls.className)}', '${cls.slots}')">Đăng ký</button>`;
-                    }
-                }
-
-                card.innerHTML = `
-                    <div class="card-header">${cls.className}</div>
-                    <div class="card-body">
-                        Khu vực: ${cls.area}<br>
-                        Trình độ: ${cls.level}<br>
-                        Học phí: ${cls.fee}<br>
-                        Số lượng: <span class="slot-text" id="slot_text_${cls.id}">${cls.slots}</span><br>
-                        HLV: ${cls.coach}
-                    </div>
-                    <div class="card-footer" id="card_footer_${cls.id}">
-                        ${buttonHtml}
-                    </div>
-                `;
+                card.id = `card_${cls.id}`; // Định danh ID cho từng thẻ card
+                card.innerHTML = createCardTemplate(cls);
                 coursesContainer.appendChild(card);
             });
+        }
+
+        // HÀM UPDATE RIÊNG BIỆT: Chỉ nạp lại (reload) cấu trúc của đúng 1 thẻ card được chỉ định
+        function renderSingleCard(cls) {
+            const targetCard = document.getElementById(`card_${cls.id}`);
+            if (targetCard) {
+                targetCard.innerHTML = createCardTemplate(cls);
+            }
         }
 
         function handleCourseClick(courseId, classNameEncoded, currentSlots) {
@@ -339,7 +344,6 @@
             }
         }
 
-        // YÊU CẦU MỚI: Xử lý tăng số lượng trực tiếp trên giao diện DOM (Không reload trang)
         function executeStudentRegistration(classId, className, currentSlots) {
             const callbackName = 'jsonp_student_reg_' + Math.round(100000 * Math.random());
             
@@ -350,30 +354,19 @@
                 if (data.status === "success") {
                     alert(`Chúc mừng! Bạn đã đăng ký thành công vào lớp "${className}".`);
                     
-                    // Thực hiện tính toán tăng sĩ số ngay trên giao diện tĩnh
-                    const slotTextElem = document.getElementById(`slot_text_${classId}`);
-                    const cardFooterElem = document.getElementById(`card_footer_${classId}`);
+                    // Tìm đối tượng lớp học nằm trong bộ nhớ cục bộ (local array)
+                    const classObj = allLocalClasses.find(c => c.id === classId);
                     
-                    if (slotTextElem && currentSlots.includes('/')) {
+                    if (classObj && currentSlots.includes('/')) {
                         const parts = currentSlots.split('/');
                         const nextCount = parseInt(parts[0], 10) + 1;
                         const maxCount = parseInt(parts[1], 10);
-                        const newSlotsString = `${nextCount}/${maxCount}`;
                         
-                        // 1. Cập nhật text số lượng mới (Ví dụ từ 1/6 thành 2/6)
-                        slotTextElem.innerText = newSlotsString;
+                        // Cập nhật giá trị số lượng mới vào mảng dữ liệu local
+                        classObj.slots = `${nextCount}/${maxCount}`;
                         
-                        // Cập nhật lại mảng local data để lưu vết khi tìm kiếm (Search) không bị reset số cũ
-                        const classObj = allLocalClasses.find(c => c.id === classId);
-                        if(classObj) classObj.slots = newSlotsString;
-
-                        // 2. Nếu sau khi tăng mà lớp đạt tối đa, biến nút Đăng ký thành text "Lớp đã full" luôn
-                        if (nextCount >= maxCount && cardFooterElem) {
-                            cardFooterElem.innerHTML = `<button class="btn-register-course" style="background-color: #e5e7eb; color: #9ca3af; border-color: #d1d5db; cursor: not-allowed;" disabled>Lớp đã full</button>`;
-                        } else if(cardFooterElem) {
-                            // Cập nhật lại hàm onclick với dữ liệu slots mới để phòng trường hợp học viên bấm tiếp lần 2
-                            cardFooterElem.innerHTML = `<button class="btn-register-course" onclick="handleCourseClick('${classId}', '${encodeURIComponent(className)}', '${newSlotsString}')">Đăng ký</button>`;
-                        }
+                        // THỰC HIỆN YÊU CẦU: Tải lại và vẽ lại duy nhất cấu trúc HTML của thẻ lớp học này
+                        renderSingleCard(classObj);
                     }
                 } else {
                     alert("Đăng ký thất bại: " + data.message);
@@ -386,7 +379,6 @@
             document.body.appendChild(script);
         }
 
-        // Bộ lọc tìm kiếm thời gian thực
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const keyword = e.target.value.toLowerCase().trim();
             const filtered = allLocalClasses.filter(cls => 
