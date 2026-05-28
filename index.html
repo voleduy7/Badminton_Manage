@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BAETON Badminton - Trang chủ</title>
-    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,7 +50,7 @@
             margin-bottom: 2px;
         }
 
-        /* --- NAVIGATION BAR --- */
+        /* --- NAVIGATION BAR (SỬA ĐỂ GIÃN CÁCH CÁC TAB) --- */
         .nav-wrapper {
             width: 100%;
             border-bottom: 2px solid #000000;
@@ -57,18 +58,19 @@
         }
         .nav-bar {
             display: inline-flex;
-            border-top: 2px solid #000000;
-            border-left: 2px solid #000000;
             background-color: #ffffff;
+            gap: 15px; /* Tạo khoảng cách 15px giữa các ô tab */
         }
         .nav-item {
             padding: 12px 35px;
             font-size: 22px;
             font-weight: bold;
             cursor: pointer;
-            border-right: 2px solid #000000;
+            border: 2px solid #000000; /* Thay đổi thành border bọc trọn từng ô */
+            border-bottom: none; /* Giữ nguyên không border đáy để dính vào đường gạch ngang wrapper */
             transition: 0.1s;
             user-select: none;
+            background-color: #ffffff;
         }
         .nav-item:hover, .nav-item.active {
             background-color: #000000 !important;
@@ -83,7 +85,7 @@
             display: block;
         }
 
-        /* --- SEARCH CONTAINER --- */
+        /* --- SEARCH & LOCATION FILTER CONTAINER --- */
         .search-container {
             display: flex;
             align-items: center;
@@ -100,6 +102,35 @@
             font-size: 16px;
             border: 2px solid #000000;
             outline: none;
+        }
+
+        /* Style nút Gần tôi chuẩn phong cách Neo-brutalism */
+        .btn-near-me {
+            padding: 8px 18px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 3px 3px 0px #000000;
+            cursor: pointer;
+            transition: 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        .btn-near-me:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #000000;
+            background-color: #f3f4f6;
+        }
+        .btn-near-me:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .btn-near-me.active-location {
+            background-color: #000000;
+            color: #ffffff;
         }
 
         /* --- SLIDER CONTAINER --- */
@@ -199,6 +230,10 @@
         <div class="search-container">
             <div class="search-label">Tìm kiếm lớp:</div>
             <input type="text" class="search-input" id="searchInput" placeholder="Nhập khu vực, tên lớp hoặc huấn luyện viên...">
+            
+            <button class="btn-near-me" id="btnNearMe" onclick="sortByProximity()">
+                <i class="fa-solid fa-location-crosshairs"></i> Gần tôi
+            </button>
         </div>
 
         <div class="slider-wrapper">
@@ -240,6 +275,32 @@
         const authNav = document.getElementById('authNav');
         const coursesContainer = document.getElementById('coursesContainer');
         let allLocalClasses = [];
+        let userCoords = null; 
+
+        const DISTRICT_COORDINATES = {
+            "quận 1": { lat: 10.7760, lng: 106.7011 },
+            "quận 3": { lat: 10.7843, lng: 106.6812 },
+            "quận 4": { lat: 10.7578, lng: 106.7067 },
+            "quận 5": { lat: 10.7541, lng: 106.6634 },
+            "quận 6": { lat: 10.7481, lng: 106.6413 },
+            "quận 7": { lat: 10.7340, lng: 106.7214 },
+            "quận 8": { lat: 10.7240, lng: 106.6286 },
+            "quận 10": { lat: 10.7746, lng: 106.6669 },
+            "quận 11": { lat: 10.7629, lng: 106.6507 },
+            "quận 12": { lat: 10.8671, lng: 106.6413 },
+            "bình thạnh": { lat: 10.8106, lng: 106.7091 },
+            "gò vấp": { lat: 10.8388, lng: 106.6657 },
+            "tân bình": { lat: 10.8014, lng: 106.6525 },
+            "quận tân bình": { lat: 10.8014, lng: 106.6525 },
+            "tân phú": { lat: 10.7925, lng: 106.6183 },
+            "bình tân": { lat: 10.7654, lng: 106.5815 },
+            "phú nhuận": { lat: 10.7992, lng: 106.6803 },
+            "thủ đức": { lat: 10.8494, lng: 106.7537 },
+            "nhà bè": { lat: 10.6662, lng: 106.7461 },
+            "bình chánh": { lat: 10.6875, lng: 106.5938 },
+            "hóc môn": { lat: 10.8842, lng: 106.5920 },
+            "củ chi": { lat: 11.0067, lng: 106.5131 }
+        };
 
         function switchTab(tabName, element) {
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -248,7 +309,6 @@
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
 
-        // ĐÃ XỬ LÝ DÀN NGANG HÀNG NÚT BẤM TẠI ĐÂY
         if (loggedUser) {
             let userHtml = `
                 <div class="user-container">
@@ -287,6 +347,75 @@
             document.body.appendChild(script);
         }
 
+        function getCoordsFromArea(areaText) {
+            if (!areaText) return null;
+            const cleanArea = areaText.toLowerCase().trim();
+            for (const key in DISTRICT_COORDINATES) {
+                if (cleanArea.includes(key)) {
+                    return DISTRICT_COORDINATES[key];
+                }
+            }
+            return null; 
+        }
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+            if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity; 
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; 
+        }
+
+        function sortByProximity() {
+            const btn = document.getElementById('btnNearMe');
+            
+            if (!navigator.geolocation) {
+                alert("Trình duyệt của bạn không hỗ trợ định vị Geolocation.");
+                return;
+            }
+
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang định vị...`;
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    userCoords = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    btn.classList.add('active-location');
+                    btn.innerHTML = `<i class="fa-solid fa-location-dot"></i> Đã định vị`;
+
+                    let sortedClasses = [...allLocalClasses].sort((a, b) => {
+                        const coordsA = getCoordsFromArea(a.area);
+                        const coordsB = getCoordsFromArea(b.area);
+                        
+                        const distA = coordsA ? getDistance(userCoords.lat, userCoords.lng, coordsA.lat, coordsA.lng) : Infinity;
+                        const distB = coordsB ? getDistance(userCoords.lat, userCoords.lng, coordsB.lat, coordsB.lng) : Infinity;
+                        
+                        return distA - distB; 
+                    });
+
+                    renderClasses(sortedClasses);
+                },
+                (error) => {
+                    btn.innerHTML = `<i class="fa-solid fa-location-crosshairs"></i> Gần tôi`;
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            alert("Vui lòng cấp quyền truy cập vị trí trên trình duyệt để hệ thống tìm kiếm lớp gần bạn nhất.");
+                            break;
+                        default:
+                            alert("Lỗi xác định vị trí. Vui lòng thử lại sau.");
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 8000 }
+            );
+        }
+
         function renderClasses(list) {
             coursesContainer.innerHTML = "";
             list.forEach(cls => {
@@ -302,6 +431,17 @@
                     slotsDisplay = "0/6"; 
                 }
 
+                let distanceText = "";
+                if (userCoords) {
+                    const classCoords = getCoordsFromArea(cls.area);
+                    if (classCoords) {
+                        const dist = getDistance(userCoords.lat, userCoords.lng, classCoords.lat, classCoords.lng);
+                        if (dist !== Infinity) {
+                            distanceText = `<br><strong style="color:#d97706;"><i class="fa-solid fa-route"></i> Cách bạn:</strong> ~${dist.toFixed(1)} km`;
+                        }
+                    }
+                }
+
                 const card = document.createElement('div');
                 card.className = 'course-card';
                 card.id = `card_${cls.id}`;
@@ -312,7 +452,7 @@
                         Trình độ: ${cls.level}<br>
                         Học phí: ${cls.fee}<br>
                         Số lượng: <span id="slot_${cls.id}">${slotsDisplay}</span><br>
-                        HLV: ${cls.coach}
+                        HLV: ${cls.coach} ${distanceText}
                     </div>
                     <div class="card-footer" id="footer_${cls.id}">
                         ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="registerClass('${cls.id}', '${cls.className}', '${slotsDisplay}')">Đăng ký</button>`)}
