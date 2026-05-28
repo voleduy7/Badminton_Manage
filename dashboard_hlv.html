@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký mở lớp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .form-container {
+            text-align: center;
+            width: 100%;
+            max-width: 650px;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-size: 18px;
+            width: 180px;
+            text-align: left;
+            font-weight: 500;
+        }
+        .input-wrapper {
+            width: 350px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 18px;
+            border: 2px solid #000000;
+            box-sizing: border-box;
+            outline: none;
+            background-color: #ffffff;
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23000000'><polygon points='20,30 80,30 50,70'/></svg>");
+            background-repeat: no-repeat;
+            background-size: 15px;
+            background-position: calc(100% - 12px) center;
+            padding-right: 30px !important;
+        }
+        .agreement-group {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 12px;
+            margin: 40px auto 30px auto;
+            max-width: 530px;
+            text-align: left;
+        }
+        .agreement-group input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .agreement-text {
+            font-size: 16px;
+            line-height: 1.4;
+            user-select: none;
+            cursor: pointer;
+        }
+        .btn-submit {
+            background-color: #10b981; 
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 12px 50px;
+            border: 2px solid #000000;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            box-shadow: 4px 4px 0px #000000;
+        }
+        .btn-submit:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000000;
+        }
+        .btn-submit:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .status-msg {
+            font-size: 16px;
+            margin-top: 20px;
+            font-weight: 500;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="title">Đăng ký mở lớp</div>
+        
+        <form id="addClassForm">
+            <div class="form-group">
+                <label for="className">Tên lớp:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="className" required placeholder="Ví dụ: Lớp Cơ Bản Q7">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="area">Khu vực:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="area" required placeholder="Ví dụ: Quận 7, Gò Vấp...">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="level">Trình độ:</label>
+                <div class="input-wrapper">
+                    <select id="level" required>
+                        <option value="Cơ bản">Cơ bản</option>
+                        <option value="Nâng cao">Nâng cao</option>
+                        <option value="Trẻ em">Trẻ em</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="slots">Số lượng học viên:</label>
+                <div class="input-wrapper">
+                    <input type="number" id="slots" min="1" max="50" required placeholder="Ví dụ: 6">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="fee">Học phí 1 tháng:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="fee" required placeholder="Ví dụ: 1tr/tháng, 1.2tr/tháng">
+                </div>
+            </div>
+
+            <div class="agreement-group">
+                <input type="checkbox" id="agreeCheck" required>
+                <label for="agreeCheck" class="agreement-text">
+                    Tôi cam kết đúng thông tin và hoàn toàn chịu trách nhiệm với học viên về thông tin trên
+                </label>
+            </div>
+
+            <button type="submit" class="btn-submit">Gửi yêu cầu</button>
+            <div class="status-msg" id="statusMsg"></div>
+        </form>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCoach = urlParams.get('user') || "Huấn luyện viên";
+        const currentRole = urlParams.get('role') || "coach"; // Nhận biến role để khi quay về không bị mất quyền
+
+        document.getElementById('addClassForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const className = document.getElementById('className').value.trim();
+            const area = document.getElementById('area').value.trim();
+            const level = document.getElementById('level').value;
+            const slots = document.getElementById('slots').value;
+            const fee = document.getElementById('fee').value.trim();
+            const agreeCheck = document.getElementById('agreeCheck');
+            const statusMsg = document.getElementById('statusMsg');
+
+            if (!agreeCheck.checked) {
+                statusMsg.style.color = "#ff0000";
+                statusMsg.innerText = "Bạn phải tick chọn cam kết thông tin trước khi gửi!";
+                return;
+            }
+
+            statusMsg.style.color = "#0000ff";
+            statusMsg.innerText = "Đang gửi thông tin lớp học lên hệ thống...";
+
+            const callbackName = 'jsonp_create_class_' + Math.round(100000 * Math.random());
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                document.getElementById(callbackName).remove();
+
+                if (data.status === "success") {
+                    statusMsg.style.color = "#008000";
+                    statusMsg.innerText = "Đăng ký mở lớp thành công! Đang quay trở lại trang chủ...";
+                    document.getElementById('addClassForm').reset();
+                    
+                    // YÊU CẦU: Sau khi đăng ký xong, tự động đưa HLV về lại trang chủ kèm session định danh sạch sẽ
+                    setTimeout(() => {
+                        window.location.href = `index.html?user=${encodeURIComponent(currentCoach)}&role=${currentRole}`;
+                    }, 1500);
+                } else {
+                    statusMsg.style.color = "#ff0000";
+                    statusMsg.innerText = data.message;
+                }
+            };
+
+            const script = document.createElement('script');
+            script.src = `${CONFIG.WEB_APP_URL}?action=create_class&className=${encodeURIComponent(className)}&area=${encodeURIComponent(area)}&level=${encodeURIComponent(level)}&slots=${encodeURIComponent(slots)}&fee=${encodeURIComponent(fee)}&coach=${encodeURIComponent(currentCoach)}&callback=${callbackName}`;
+            script.id = callbackName;
+            
+            script.onerror = function() {
+                statusMsg.style.color = "#ff0000";
+                statusMsg.innerText = "Lỗi kết nối dữ liệu. Vui lòng kiểm tra cấu hình script.";
+                delete window[callbackName];
+            };
+
+            document.body.appendChild(script);
+        });
+    </script>
+</body>
+</html>

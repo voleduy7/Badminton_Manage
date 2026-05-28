@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý lớp học</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+        .header-section {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        .btn-back {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: 2px solid #000000;
+            padding: 6px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px #000000;
+            transition: 0.1s;
+        }
+        .btn-back:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px #000000;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .filter-label {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .select-wrapper {
+            position: relative;
+            width: 350px;
+        }
+        .class-select {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 18px;
+            border: 2px solid #000000;
+            outline: none;
+            background-color: #ffffff;
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23000000'><polygon points='20,30 80,30 50,70'/></svg>");
+            background-repeat: no-repeat;
+            background-size: 15px;
+            background-position: calc(100% - 12px) center;
+            padding-right: 35px;
+        }
+        .table-container {
+            margin-top: 20px;
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            text-align: left;
+        }
+        th, td {
+            border: 2px solid #000000;
+            padding: 12px;
+            font-size: 16px;
+        }
+        th {
+            background-color: #f3f4f6;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        .status-text {
+            font-size: 16px;
+            color: #666666;
+            margin-top: 30px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Bố cục thiết kế giao diện theo ảnh tham chiếu {59A64B11-B82D-4723-877C-5CD01DDF0859}.png -->
+        <div class="header-section">
+            <button class="btn-back" onclick="goBackHome()"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+            <h1 class="title">Quản lý lớp học</h1>
+        </div>
+
+        <div class="filter-group">
+            <div class="filter-label">Chọn lớp:</div>
+            <div class="select-wrapper">
+                <select id="classDropdown" class="class-select" onchange="handleClassChange()">
+                    <option value="">-- Đang tải danh sách lớp --</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="studentTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th style="width: 80px; text-align: center;">STT</th>
+                        <th>Tên học viên</th>
+                        <th>Thời gian đăng ký lớp học</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <!-- Javascript điền dữ liệu động vào đây -->
+                </tbody>
+            </table>
+            <div id="statusNotice" class="status-text">Đang đồng bộ dữ liệu lớp học...</div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCoach = urlParams.get('user') || "";
+        const currentRole = urlParams.get('role') || "coach";
+
+        let serverRegistrations = [];
+        const classDropdown = document.getElementById('classDropdown');
+        const studentTable = document.getElementById('studentTable');
+        const studentTableBody = document.getElementById('studentTableBody');
+        const statusNotice = document.getElementById('statusNotice');
+
+        function goBackHome() {
+            window.location.href = `index.html?user=${encodeURIComponent(currentCoach)}&role=${currentRole}`;
+        }
+
+        // Thực hiện đồng bộ kết nối dữ liệu từ Google Apps Script
+        function fetchCoachData() {
+            if (!currentCoach) {
+                statusNotice.style.color = "red";
+                statusNotice.innerText = "Lỗi xác thực: Không tìm thấy thông tin Huấn luyện viên.";
+                return;
+            }
+
+            const callbackName = 'jsonp_coach_manage_' + Math.round(100000 * Math.random());
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                document.getElementById(callbackName).remove();
+
+                if (data.status === "success") {
+                    serverRegistrations = data.registrations;
+                    populateDropdown(data.classes);
+                } else {
+                    statusNotice.style.color = "red";
+                    statusNotice.innerText = "Không thể đồng bộ dữ liệu lớp.";
+                }
+            };
+
+            const script = document.createElement('script');
+            script.src = `${CONFIG.WEB_APP_URL}?action=get_coach_classes_and_students&coach=${encodeURIComponent(currentCoach)}&callback=${callbackName}`;
+            script.id = callbackName;
+            document.body.appendChild(script);
+        }
+
+        // Đổ danh sách lớp học của riêng HLV vào Dropbox selector
+        function populateDropdown(classes) {
+            classDropdown.innerHTML = "";
+            
+            if (classes.length === 0) {
+                classDropdown.innerHTML = '<option value="">-- Bạn chưa mở lớp nào --</option>';
+                statusNotice.innerText = "Tài khoản của bạn chưa đăng ký mở lớp học nào trên hệ thống.";
+                return;
+            }
+
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.innerText = "-- Click chọn một lớp học để xem --";
+            classDropdown.appendChild(defaultOption);
+
+            classes.forEach(cls => {
+                const option = document.createElement('option');
+                option.value = cls.id;
+                option.innerText = cls.className;
+                classDropdown.appendChild(option);
+            });
+
+            statusNotice.innerText = "Vui lòng chọn một lớp cụ thể ở mục Chọn lớp để kiểm tra học viên.";
+        }
+
+        // Xử lý lọc dữ liệu bảng học viên tương ứng khi đổi giá trị Dropbox
+        function handleClassChange() {
+            const selectedClassId = classDropdown.value;
+            studentTableBody.innerHTML = ""; 
+
+            if (!selectedClassId) {
+                studentTable.style.display = "none";
+                statusNotice.style.display = "block";
+                statusNotice.innerText = "Vui lòng chọn một lớp cụ thể ở mục Chọn lớp để kiểm tra học viên.";
+                return;
+            }
+
+            // Lọc danh sách học viên theo ID lớp được chọn
+            const filteredStudents = serverRegistrations.filter(reg => String(reg.classId) === String(selectedClassId));
+
+            if (filteredStudents.length === 0) {
+                studentTable.style.display = "none";
+                statusNotice.style.display = "block";
+                statusNotice.innerText = "Lớp học này hiện tại chưa có học viên nào đăng ký tham gia.";
+            } else {
+                statusNotice.style.display = "none";
+                studentTable.style.display = "table";
+
+                filteredStudents.forEach((student, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="text-align: center; font-weight: bold;">${index + 1}</td>
+                        <td>${student.studentName}</td>
+                        <td style="color: #444444;">${student.timestamp}</td>
+                    `;
+                    studentTableBody.appendChild(row);
+                });
+            }
+        }
+
+        window.onload = fetchCoachData;
+    </script>
+</body>
+</html>

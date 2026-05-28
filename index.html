@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAETON Badminton - Trang chủ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 40px;
+        }
+        .logo {
+            font-size: 64px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .auth-links {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            text-align: right;
+        }
+        .auth-links a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        .user-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+        .user-logged {
+            font-weight: bold;
+            color: #008000;
+            font-size: 18px;
+        }
+        .btn-open-class {
+            font-size: 14px;
+            background-color: #10b981;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 4px 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px #000000;
+            transition: 0.1s;
+        }
+        .btn-open-class:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px #000000;
+        }
+        .btn-logout {
+            font-size: 14px;
+            color: #ff0000;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .btn-logout:hover {
+            text-decoration: underline;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 60px;
+        }
+        .search-label {
+            font-size: 22px;
+            font-weight: 500;
+        }
+        .search-input {
+            width: 450px;
+            padding: 8px 12px;
+            font-size: 18px;
+            border: 2px solid #000000;
+            outline: none;
+        }
+        .slider-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .arrow-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            outline: none;
+        }
+        .arrow-btn svg {
+            width: 30px;
+            height: 50px;
+        }
+        .courses-container {
+            display: flex;
+            gap: 25px;
+            overflow-x: auto;
+            padding: 10px;
+            max-width: 1060px;
+        }
+        .course-card {
+            width: 240px;
+            border: 2px solid #000000;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        .card-header {
+            border-bottom: 2px solid #000000;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            background-color: #f3f4f6;
+        }
+        .card-body {
+            padding: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        .card-footer {
+            padding: 15px;
+            text-align: center;
+        }
+        .btn-register-course {
+            width: 90%;
+            padding: 8px 0;
+            font-size: 16px;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-register-course:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .loading-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: #666666;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">BAETON Badminton</div>
+        <div class="auth-links" id="authNav">
+            <a href="login.html">Đăng nhập</a> / <a href="register.html">Đăng ký</a>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <div class="search-label">Tìm kiếm lớp:</div>
+        <input type="text" class="search-input" id="searchInput" placeholder="Nhập khu vực, tên lớp hoặc huấn luyện viên...">
+    </div>
+
+    <div class="slider-section">
+        <button class="arrow-btn" onclick="scrollSlider(-265)">
+            <svg viewBox="0 0 100 100">
+                <polygon points="80,10 20,50 80,90 70,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/>
+            </svg>
+        </button>
+
+        <div class="courses-container" id="coursesContainer">
+            <div class="loading-text">Đang tải danh sách lớp học từ database...</div>
+        </div>
+
+        <button class="arrow-btn" onclick="scrollSlider(265)">
+            <svg viewBox="0 0 100 100">
+                <polygon points="20,10 80,50 20,90 30,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/>
+            </svg>
+        </button>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const loggedUser = urlParams.get('user'); 
+        const userRole = urlParams.get('role'); 
+        const authNav = document.getElementById('authNav');
+        const coursesContainer = document.getElementById('coursesContainer');
+        
+        let allLocalClasses = [];
+
+        // Kiểm tra trạng thái đăng nhập
+        if (loggedUser) {
+            let userHtml = `
+                <div class="user-container">
+                    <span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>
+            `;
+            
+            // Nếu tài khoản là Huấn luyện viên, thêm nút "Mở lớp" và nút "Lớp của tôi" liền kề nhau
+            if (userRole === 'coach') {
+                userHtml += `
+                    <button class="btn-open-class" onclick="goToDashboardHLV()">Mở lớp</button>
+                    <button class="btn-open-class" style="background-color: #3b82f6;" onclick="goToManageClasses()">Lớp của tôi</button>
+                `;
+            }
+            
+            userHtml += `
+                    <button class="btn-logout" onclick="logoutUser()">Đăng xuất</button>
+                </div>
+            `;
+            authNav.innerHTML = userHtml;
+        }
+
+        function goToDashboardHLV() {
+            window.location.href = `dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=${userRole}`;
+        }
+
+        function goToManageClasses() {
+            window.location.href = `manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=${userRole}`;
+        }
+
+        function logoutUser() {
+            if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+                window.location.href = "index.html";
+            }
+        }
+
+        function loadClassesFromServer() {
+            const callbackName = 'jsonp_load_classes_' + Math.round(100000 * Math.random());
+            
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                document.getElementById(callbackName).remove();
+
+                if (data.status === "success" && data.classes.length > 0) {
+                    allLocalClasses = data.classes;
+                    renderClasses(allLocalClasses);
+                } else {
+                    coursesContainer.innerHTML = `<div class="loading-text">Hiện tại chưa có lớp học nào được đăng ký mở.</div>`;
+                }
+            };
+
+            const script = document.createElement('script');
+            script.src = `${CONFIG.WEB_APP_URL}?action=get_classes&callback=${callbackName}`;
+            script.id = callbackName;
+            document.body.appendChild(script);
+        }
+
+        function renderClasses(classesList) {
+            coursesContainer.innerHTML = "";
+            classesList.forEach(cls => {
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                
+                // Phân tích logic kiểm tra lớp đầy (Ví dụ: "6/6" -> lớp đã full)
+                let isFull = false;
+                if (cls.slots && cls.slots.includes('/')) {
+                    const parts = cls.slots.split('/');
+                    const current = parseInt(parts[0], 10);
+                    const max = parseInt(parts[1], 10);
+                    if (current >= max) {
+                        isFull = true;
+                    }
+                }
+
+                // Xử lý trạng thái nút bấm linh hoạt theo vai trò người dùng và sĩ số lớp
+                let buttonHtml = '';
+                if (userRole === 'coach') {
+                    // Đối với Huấn luyện viên: Hiển thị nút "Chi tiết lớp"
+                    buttonHtml = `<button class="btn-register-course" onclick="handleCourseClick('${cls.id}', '${encodeURIComponent(cls.className)}', false)">Chi tiết lớp</button>`;
+                } else {
+                    // Đối với Học viên (hoặc khách chưa đăng nhập)
+                    if (isFull) {
+                        // Nếu lớp full: Khóa nút đăng ký, chuyển sang màu xám
+                        buttonHtml = `<button class="btn-register-course" style="background-color: #e5e7eb; color: #9ca3af; border-color: #d1d5db; cursor: not-allowed;" disabled>Lớp đã full</button>`;
+                    } else {
+                        // Nếu còn chỗ: Hiển thị nút đăng ký bình thường
+                        buttonHtml = `<button class="btn-register-course" onclick="handleCourseClick('${cls.id}', '${encodeURIComponent(cls.className)}', true)">Đăng ký</button>`;
+                    }
+                }
+
+                card.innerHTML = `
+                    <div class="card-header">${cls.className}</div>
+                    <div class="card-body">
+                        Khu vực: ${cls.area}<br>
+                        Trình độ: ${cls.level}<br>
+                        Học phí: ${cls.fee}<br>
+                        Số lượng: ${cls.slots}<br>
+                        HLV: ${cls.coach}
+                    </div>
+                    <div class="card-footer">
+                        ${buttonHtml}
+                    </div>
+                `;
+                coursesContainer.appendChild(card);
+            });
+        }
+
+        function handleCourseClick(courseId, classNameEncoded, canRegister) {
+            const className = decodeURIComponent(classNameEncoded);
+
+            if (!loggedUser) {
+                alert("Vui lòng đăng nhập tài khoản trước khi thực hiện thao tác này!");
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Xử lý chuyển hướng xem chi tiết đối với HLV
+            if (userRole === 'coach') {
+                window.location.href = `detail_class.html?id=${courseId}&user=${encodeURIComponent(loggedUser)}&role=${userRole}`;
+                return;
+            }
+
+            // Xử lý quy trình đăng ký cho Học viên thông qua Toast Confirm bản gốc
+            if (canRegister) {
+                const confirmRegistration = confirm(`Bạn có chắc chắn muốn đăng ký tham gia lớp học "${className}" không?`);
+                if (confirmRegistration) {
+                    executeStudentRegistration(courseId, className);
+                }
+            }
+        }
+
+        function executeStudentRegistration(classId, className) {
+            const callbackName = 'jsonp_student_reg_' + Math.round(100000 * Math.random());
+            
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                document.getElementById(callbackName).remove();
+
+                if (data.status === "success") {
+                    alert(`Chúc mừng! Bạn đã đăng ký thành công vào lớp "${className}". Trang sẽ tự động làm mới để cập nhật số lượng.`);
+                    window.location.reload();
+                } else {
+                    alert("Đăng ký thất bại: " + data.message);
+                }
+            };
+
+            const script = document.createElement('script');
+            script.src = `${CONFIG.WEB_APP_URL}?action=register_student&classId=${classId}&className=${encodeURIComponent(className)}&studentName=${encodeURIComponent(loggedUser)}&callback=${callbackName}`;
+            script.id = callbackName;
+            document.body.appendChild(script);
+        }
+
+        // Bộ lọc tìm kiếm thời gian thực
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const keyword = e.target.value.toLowerCase().trim();
+            const filtered = allLocalClasses.filter(cls => 
+                cls.className.toLowerCase().includes(keyword) || 
+                cls.area.toLowerCase().includes(keyword) || 
+                cls.coach.toLowerCase().includes(keyword) ||
+                cls.level.toLowerCase().includes(keyword)
+            );
+            renderClasses(filtered);
+        });
+
+        function scrollSlider(offset) {
+            coursesContainer.scrollBy({ left: offset, behavior: 'smooth' });
+        }
+
+        window.onload = loadClassesFromServer;
+    </script>
+</body>
+</html>
