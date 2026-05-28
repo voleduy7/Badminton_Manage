@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BAETON Badminton - Trang chủ</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,13 +13,14 @@
             padding: 20px 40px;
             box-sizing: border-box;
         }
-        /* --- HEADER & AUTH --- */
+        /* --- HEADER & AUTH LAYOUT --- */
         .header {
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            margin-top: 10px;
         }
         .logo {
             font-size: 48px;
@@ -32,73 +33,57 @@
             right: 0;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 16px;
-            text-align: right;
-        }
-        .auth-links a {
-            text-decoration: none;
-            color: #000000;
-            font-weight: bold;
-            margin: 0 5px;
+            display: flex;
+            gap: 12px;
         }
         .user-container {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 4px;
+            gap: 6px;
         }
         .user-logged {
             font-weight: bold;
             color: #008000;
             font-size: 16px;
-        }
-        .btn-open-class, .btn-logout {
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            background: none;
-            padding: 0;
-        }
-        .btn-open-class {
-            color: #10b981;
             margin-bottom: 2px;
         }
-        .btn-logout {
-            color: #ff0000;
-        }
 
-        /* --- NAVIGATION BAR (YÊU CẦU MỚI) --- */
+        /* --- NAVIGATION BAR --- */
+        .nav-wrapper {
+            width: 100%;
+            border-bottom: 2px solid #000000;
+            margin-bottom: 40px;
+        }
         .nav-bar {
-            display: flex;
-            border-top: 2px solid #000;
-            border-bottom: 2px solid #000;
-            margin-bottom: 30px;
+            display: inline-flex;
+            border-top: 2px solid #000000;
+            border-left: 2px solid #000000;
+            background-color: #ffffff;
         }
         .nav-item {
-            padding: 15px 40px;
-            font-size: 24px;
+            padding: 12px 35px;
+            font-size: 22px;
             font-weight: bold;
             cursor: pointer;
-            border-right: 2px solid #000;
-            transition: 0.2s;
-        }
-        .nav-item:first-child {
-            border-left: 2px solid #000;
+            border-right: 2px solid #000000;
+            transition: 0.1s;
+            user-select: none;
         }
         .nav-item:hover, .nav-item.active {
-            background-color: #f3f4f6;
+            background-color: #000000 !important;
+            color: #ffffff !important;
         }
 
         /* --- CONTENT SECTIONS --- */
         .content-section {
-            display: none; /* Ẩn mặc định */
+            display: none;
         }
         .content-section.active {
-            display: block; /* Hiện khi active */
+            display: block;
         }
 
-        /* --- SEARCH & SLIDER (LỚP HỌC) --- */
+        /* --- SEARCH CONTAINER --- */
         .search-container {
             display: flex;
             align-items: center;
@@ -113,76 +98,82 @@
             width: 400px;
             padding: 8px 12px;
             font-size: 16px;
-            border: 2px solid #000;
+            border: 2px solid #000000;
             outline: none;
+        }
+
+        /* --- SLIDER CONTAINER --- */
+        .slider-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
         }
         .slider-section {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 20px;
+            gap: 15px;
+            max-width: 100%;
         }
         .courses-container {
             display: flex;
             gap: 20px;
             overflow-x: auto;
-            padding: 10px 5px;
-            max-width: 1100px;
-            border-left: 2px solid #000;
-            border-right: 2px solid #000;
+            padding: 15px 5px;
+            width: 1024px;
+            max-width: calc(100vw - 200px);
+            scrollbar-width: thin;
         }
+        
         .course-card {
-            width: 240px;
-            border: 2px solid #000;
+            width: 236px;
+            border: 2px solid #000000;
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
+            box-shadow: 4px 4px 0px #000000;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .course-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000000;
         }
         .card-header {
-            border-bottom: 2px solid #000;
+            border-bottom: 2px solid #000000;
             padding: 10px;
             font-weight: bold;
             text-align: center;
             background-color: #f3f4f6;
+            font-size: 16px;
+            color: #000000;
+            transition: 0.1s;
+        }
+        .course-card:hover .card-header {
+            background-color: #000000;
+            color: #ffffff;
         }
         .card-body {
-            padding: 12px;
+            padding: 15px;
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
             flex-grow: 1;
         }
         .card-footer {
-            padding: 10px;
+            padding: 15px;
             text-align: center;
+            border-top: 1px dashed #cccccc;
         }
-        .btn-register {
-            width: 90%;
-            padding: 6px 0;
-            font-weight: bold;
-            background: #fff;
-            border: 2px solid #000;
-            cursor: pointer;
-        }
-        .btn-register:hover {
-            background: #000;
-            color: #fff;
-        }
-        .arrow-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-        }
-        .arrow-btn svg { width: 25px; height: 40px; }
 
-        /* --- EMPTY STATE FOR NEW TABS --- */
+        /* --- EMPTY STATE --- */
         .empty-tab-content {
-            padding: 50px;
+            padding: 60px;
             text-align: center;
-            font-size: 20px;
-            color: #666;
-            border: 2px dashed #ccc;
+            font-size: 18px;
+            color: #555555;
+            border: 2px dashed #000000;
+            background-color: #fafafa;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -191,14 +182,17 @@
     <div class="header">
         <div class="logo">BAETON Badminton</div>
         <div class="auth-links" id="authNav">
-            <a href="login.html">Đăng nhập</a> / <a href="register.html">Đăng ký</a>
+            <a href="login.html" class="btn-auth">Đăng nhập</a>
+            <a href="register.html" class="btn-auth">Đăng ký</a>
         </div>
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-item active" onclick="switchTab('classes', this)">Lớp học</div>
-        <div class="nav-item" onclick="switchTab('courts', this)">Sân cầu</div>
-        <div class="nav-item" onclick="switchTab('casual', this)">Vãng lai</div>
+    <div class="nav-wrapper">
+        <div class="nav-bar">
+            <div class="nav-item active" onclick="switchTab('classes', this)">Lớp học</div>
+            <div class="nav-item" onclick="switchTab('courts', this)">Sân cầu</div>
+            <div class="nav-item" onclick="switchTab('casual', this)">Vãng lai</div>
+        </div>
     </div>
 
     <div id="tab-classes" class="content-section active">
@@ -207,16 +201,20 @@
             <input type="text" class="search-input" id="searchInput" placeholder="Nhập khu vực, tên lớp hoặc huấn luyện viên...">
         </div>
 
-        <div class="slider-section">
-            <button class="arrow-btn" onclick="scrollSlider(-260)">
-                <svg viewBox="0 0 100 100"><polygon points="80,10 20,50 80,90 70,50" style="fill:none;stroke:black;stroke-width:8;"/></svg>
-            </button>
-            <div class="courses-container" id="coursesContainer">
-                <div style="padding: 20px;">Đang tải danh sách lớp học...</div>
+        <div class="slider-wrapper">
+            <div class="slider-section">
+                <button class="arrow-btn" onclick="scrollSlider(-276)">
+                    <svg viewBox="0 0 100 100"><polygon points="80,10 20,50 80,90 70,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/></svg>
+                </button>
+                
+                <div class="courses-container" id="coursesContainer">
+                    <div style="padding: 20px; font-weight: bold;">Đang tải danh sách lớp học từ hệ thống...</div>
+                </div>
+                
+                <button class="arrow-btn" onclick="scrollSlider(276)">
+                    <svg viewBox="0 0 100 100"><polygon points="20,10 80,50 20,90 30,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/></svg>
+                </button>
             </div>
-            <button class="arrow-btn" onclick="scrollSlider(260)">
-                <svg viewBox="0 0 100 100"><polygon points="20,10 80,50 20,90 30,50" style="fill:none;stroke:black;stroke-width:8;"/></svg>
-            </button>
         </div>
     </div>
 
@@ -243,28 +241,36 @@
         const coursesContainer = document.getElementById('coursesContainer');
         let allLocalClasses = [];
 
-        // 1. XỬ LÝ CHUYỂN TAB (KHÔNG RELOAD TRANG)
         function switchTab(tabName, element) {
-            // Xóa class active ở tất cả các tab và nội dung
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-
-            // Kích hoạt tab và nội dung tương ứng
             element.classList.add('active');
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
 
-        // 2. HIỂN THỊ THÔNG TIN USER
+        // ĐÃ XỬ LÝ DÀN NGANG HÀNG NÚT BẤM TẠI ĐÂY
         if (loggedUser) {
-            let userHtml = `<div class="user-container"><span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>`;
+            let userHtml = `
+                <div class="user-container">
+                    <span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+            `;
+            
             if (userRole === 'coach') {
-                userHtml += `<a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a>`;
+                userHtml += `
+                        <a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a>
+                        <a href="manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class" style="color: #000000;">Lớp của tôi</a>
+                `;
             }
-            userHtml += `<a href="index.html" class="btn-logout" onclick="return confirm('Đăng xuất?')">Đăng xuất</a></div>`;
+            
+            userHtml += `
+                        <a href="index.html" class="btn-logout" onclick="return confirm('Bạn có chắc chắn muốn đăng xuất?')">Đăng xuất</a>
+                    </div>
+                </div>
+            `;
             authNav.innerHTML = userHtml;
         }
 
-        // 3. LOGIC LOAD LỚP HỌC (GIỮ NGUYÊN BẢN CŨ NHƯNG TỐI ƯU HÓA)
         function loadClasses() {
             const callbackName = 'jsonp_load_' + Date.now();
             window[callbackName] = function(data) {
@@ -284,7 +290,18 @@
         function renderClasses(list) {
             coursesContainer.innerHTML = "";
             list.forEach(cls => {
-                const isFull = cls.slots && cls.slots.split('/')[0] >= cls.slots.split('/')[1];
+                let isFull = false;
+                let slotsDisplay = cls.slots ? cls.slots.toString() : "0/0";
+                
+                if (slotsDisplay.includes('/')) {
+                    const parts = slotsDisplay.split('/');
+                    if(parseInt(parts[0], 10) >= parseInt(parts[1], 10)) {
+                        isFull = true;
+                    }
+                } else {
+                    slotsDisplay = "0/6"; 
+                }
+
                 const card = document.createElement('div');
                 card.className = 'course-card';
                 card.id = `card_${cls.id}`;
@@ -294,11 +311,11 @@
                         Khu vực: ${cls.area}<br>
                         Trình độ: ${cls.level}<br>
                         Học phí: ${cls.fee}<br>
-                        Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br>
+                        Số lượng: <span id="slot_${cls.id}">${slotsDisplay}</span><br>
                         HLV: ${cls.coach}
                     </div>
                     <div class="card-footer" id="footer_${cls.id}">
-                        ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled style="background:#eee;color:#999">Lớp đã full</button>' : `<button class="btn-register" onclick="registerClass('${cls.id}', '${cls.className}', '${cls.slots}')">Đăng ký</button>`)}
+                        ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="registerClass('${cls.id}', '${cls.className}', '${slotsDisplay}')">Đăng ký</button>`)}
                     </div>
                 `;
                 coursesContainer.appendChild(card);
@@ -306,23 +323,32 @@
         }
 
         function registerClass(id, name, slots) {
-            if (!loggedUser) return alert("Vui lòng đăng nhập!");
-            if (!confirm(`Xác nhận đăng ký lớp: ${name}?`)) return;
+            if (!loggedUser) return alert("Vui lòng đăng nhập tài khoản trước khi thực hiện thao tác này!");
+            if (!confirm(`Bạn có chắc chắn muốn đăng ký lớp: ${name}?`)) return;
 
             const callbackName = 'jsonp_reg_' + Date.now();
             window[callbackName] = function(data) {
                 delete window[callbackName];
                 document.getElementById(callbackName).remove();
                 if (data.status === "success") {
-                    alert("Đăng ký thành công!");
-                    // Cập nhật UI cục bộ
+                    alert("Chúc mừng! Bạn đã đăng ký thành công.");
+                    
                     const parts = slots.split('/');
-                    const newSlots = (parseInt(parts[0]) + 1) + "/" + parts[1];
-                    document.getElementById(`slot_${id}`).innerText = newSlots;
-                    if (parseInt(parts[0]) + 1 >= parseInt(parts[1])) {
-                        document.getElementById(`footer_${id}`).innerHTML = '<button class="btn-register" disabled style="background:#eee;color:#999">Lớp đã full</button>';
+                    const newSlots = (parseInt(parts[0], 10) + 1) + "/" + parts[1];
+                    
+                    const textElem = document.getElementById(`slot_${id}`);
+                    if(textElem) textElem.innerText = newSlots;
+                    
+                    const obj = allLocalClasses.find(c => c.id === id);
+                    if(obj) obj.slots = newSlots;
+
+                    if (parseInt(parts[0], 10) + 1 >= parseInt(parts[1], 10)) {
+                        const footerElem = document.getElementById(`footer_${id}`);
+                        if(footerElem) footerElem.innerHTML = '<button class="btn-register" disabled>Lớp đã full</button>';
                     }
-                } else alert(data.message);
+                } else {
+                    alert(data.message);
+                }
             };
             const script = document.createElement('script');
             script.src = `${CONFIG.WEB_APP_URL}?action=register_student&classId=${id}&className=${encodeURIComponent(name)}&studentName=${encodeURIComponent(loggedUser)}&callback=${callbackName}`;
@@ -330,13 +356,19 @@
             document.body.appendChild(script);
         }
 
-        // TÌM KIẾM & CUỘN
         document.getElementById('searchInput').addEventListener('input', (e) => {
-            const k = e.target.value.toLowerCase();
-            renderClasses(allLocalClasses.filter(c => c.className.toLowerCase().includes(k) || c.area.toLowerCase().includes(k)));
+            const k = e.target.value.toLowerCase().trim();
+            const filtered = allLocalClasses.filter(c => 
+                c.className.toLowerCase().includes(k) || 
+                c.area.toLowerCase().includes(k) || 
+                c.coach.toLowerCase().includes(k)
+            );
+            renderClasses(filtered);
         });
 
-        function scrollSlider(o) { coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); }
+        function scrollSlider(o) { 
+            coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); 
+        }
 
         window.onload = loadClasses;
     </script>

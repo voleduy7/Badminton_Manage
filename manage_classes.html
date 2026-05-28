@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý lớp học</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -26,23 +27,11 @@
             position: relative;
             margin-bottom: 40px;
         }
+        /* Đã dọn dẹp thuộc tính trùng lặp, chuyển sang kế thừa .btn-common */
         .btn-back {
             position: absolute;
             left: 0;
             top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: 2px solid #000000;
-            padding: 6px 15px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 2px 2px 0px #000000;
-            transition: 0.1s;
-        }
-        .btn-back:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 3px 0px #000000;
         }
         .title {
             font-size: 24px;
@@ -94,8 +83,10 @@
             padding: 12px;
             font-size: 16px;
         }
+        /* Đồng bộ tiêu đề bảng theo tone màu Đen - Trắng Neo-brutalism */
         th {
-            background-color: #f3f4f6;
+            background-color: #000000;
+            color: #ffffff;
             font-weight: bold;
         }
         tr:nth-child(even) {
@@ -112,9 +103,8 @@
 <body>
 
     <div class="container">
-        <!-- Bố cục thiết kế giao diện theo ảnh tham chiếu {59A64B11-B82D-4723-877C-5CD01DDF0859}.png -->
         <div class="header-section">
-            <button class="btn-back" onclick="goBackHome()"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+            <button class="btn-back btn-common" onclick="goBackHome()" style="font-size: 14px; padding: 6px 15px;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
             <h1 class="title">Quản lý lớp học</h1>
         </div>
 
@@ -137,8 +127,7 @@
                     </tr>
                 </thead>
                 <tbody id="studentTableBody">
-                    <!-- Javascript điền dữ liệu động vào đây -->
-                </tbody>
+                    </tbody>
             </table>
             <div id="statusNotice" class="status-text">Đang đồng bộ dữ liệu lớp học...</div>
         </div>
@@ -160,7 +149,6 @@
             window.location.href = `index.html?user=${encodeURIComponent(currentCoach)}&role=${currentRole}`;
         }
 
-        // Thực hiện đồng bộ kết nối dữ liệu từ Google Apps Script
         function fetchCoachData() {
             if (!currentCoach) {
                 statusNotice.style.color = "red";
@@ -188,7 +176,6 @@
             document.body.appendChild(script);
         }
 
-        // Đổ danh sách lớp học của riêng HLV vào Dropbox selector
         function populateDropdown(classes) {
             classDropdown.innerHTML = "";
             
@@ -213,7 +200,6 @@
             statusNotice.innerText = "Vui lòng chọn một lớp cụ thể ở mục Chọn lớp để kiểm tra học viên.";
         }
 
-        // Xử lý lọc dữ liệu bảng học viên tương ứng khi đổi giá trị Dropbox
         function handleClassChange() {
             const selectedClassId = classDropdown.value;
             studentTableBody.innerHTML = ""; 
@@ -225,7 +211,6 @@
                 return;
             }
 
-            // Lọc danh sách học viên theo ID lớp được chọn
             const filteredStudents = serverRegistrations.filter(reg => String(reg.classId) === String(selectedClassId));
 
             if (filteredStudents.length === 0) {

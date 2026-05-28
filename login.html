@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Training Time - Đăng nhập</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
@@ -65,20 +66,7 @@
             color: #666666;
             font-size: 18px;
         }
-        .btn-login {
-            margin-top: 15px;
-            padding: 8px 30px;
-            font-size: 18px;
-            background-color: #000000;
-            color: #ffffff;
-            border: 2px solid #000000;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-login:hover {
-            background-color: #ffffff;
-            color: #000000;
-        }
+        /* Đã lược bỏ các CSS trùng lặp của nút bấm cũ */
         .error-message {
             color: #ff0000;
             font-size: 16px;
@@ -88,16 +76,12 @@
         }
         .footer-text {
             font-size: 16px;
-            margin-top: 35px;
+            margin-top: 40px;
             color: #333333;
-        }
-        .footer-text a {
-            text-decoration: none;
-            color: #000000;
-            font-weight: bold;
-        }
-        .footer-text a:hover {
-            text-decoration: underline;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -123,11 +107,11 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-login">Đăng nhập</button>
+            <button type="submit" class="btn-common" style="font-size: 18px; padding: 8px 35px; margin-top: 15px;">Đăng nhập</button>
             <div class="error-message" id="errorMsg"></div>
         </form>
         
-        <div class="footer-text">Chưa có tài khoản? <a href="register.html">Đăng ký</a></div>
+        <div class="footer-text">Chưa có tài khoản? <a href="register.html" class="btn-auth">Đăng ký</a></div>
     </div>
 
     <script src="config.js"></script>
@@ -169,7 +153,6 @@
                     errorMsg.innerText = "Đăng nhập thành công! Đang chuyển hướng...";
                     
                     setTimeout(() => {
-                        // TẤT CẢ ĐỀU VỀ INDEX.HTML, mang theo thông tin user và role
                         window.location.href = `index.html?user=${encodeURIComponent(user)}&role=${data.role}`;
                     }, 1200);
                 } else {

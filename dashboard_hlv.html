@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng ký mở lớp</title>
+    <link rel="stylesheet" href="style.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -81,25 +82,7 @@
             user-select: none;
             cursor: pointer;
         }
-        .btn-submit {
-            background-color: #10b981; 
-            color: #ffffff;
-            font-size: 20px;
-            font-weight: bold;
-            padding: 12px 50px;
-            border: 2px solid #000000;
-            cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.1s;
-            box-shadow: 4px 4px 0px #000000;
-        }
-        .btn-submit:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px #000000;
-        }
-        .btn-submit:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px #000000;
-        }
+        /* Loại bỏ các CSS cấu hình nút bấm cũ để dùng .btn-common từ style.css */
         .status-msg {
             font-size: 16px;
             margin-top: 20px;
@@ -160,7 +143,7 @@
                 </label>
             </div>
 
-            <button type="submit" class="btn-submit">Gửi yêu cầu</button>
+            <button type="submit" class="btn-common" style="font-size: 20px; padding: 10px 50px;">Gửi yêu cầu</button>
             <div class="status-msg" id="statusMsg"></div>
         </form>
     </div>
@@ -169,7 +152,7 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const currentCoach = urlParams.get('user') || "Huấn luyện viên";
-        const currentRole = urlParams.get('role') || "coach"; // Nhận biến role để khi quay về không bị mất quyền
+        const currentRole = urlParams.get('role') || "coach";
 
         document.getElementById('addClassForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -201,7 +184,6 @@
                     statusMsg.innerText = "Đăng ký mở lớp thành công! Đang quay trở lại trang chủ...";
                     document.getElementById('addClassForm').reset();
                     
-                    // YÊU CẦU: Sau khi đăng ký xong, tự động đưa HLV về lại trang chủ kèm session định danh sạch sẽ
                     setTimeout(() => {
                         window.location.href = `index.html?user=${encodeURIComponent(currentCoach)}&role=${currentRole}`;
                     }, 1500);

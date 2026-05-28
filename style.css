@@ -1,0 +1,100 @@
+/* ==========================================================================
+   STYLE.CSS - ĐỒNG BỘ NÚT BẤM & HIỆU ỨNG THEO PHONG CÁCH NEO-BRUTALISM
+   ========================================================================== */
+
+/* 1. NÚT ĐĂNG NHẬP / ĐĂNG KÝ (AUTH BUTTONS) */
+.btn-auth {
+    display: inline-block;
+    text-decoration: none;
+    color: #000000;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 8px 16px;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    box-shadow: 2px 2px 0px #000000;
+    transition: 0.1s;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* 2. NÚT CHỨC NĂNG CHUNG (MỞ LỚP, QUẢN LÝ, ĐĂNG XUẤT, ĐĂNG KÝ LỚP HỌC) */
+.btn-open-class, 
+.btn-logout,
+.btn-register,
+.btn-common {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #000000;
+    background: #ffffff;
+    padding: 6px 14px;
+    text-decoration: none;
+    box-shadow: 2px 2px 0px #000000;
+    transition: 0.1s;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Định nghĩa màu chữ đặc trưng ban đầu khi chưa hover */
+.btn-open-class {
+    color: #008000;
+}
+.btn-logout {
+    color: #ff0000;
+}
+.btn-register,
+.btn-common {
+    color: #000000;
+}
+
+/* 3. HIỆU ỨNG ANIMATION HOVER CHUNG TOÀN DIỆN (NỀN ĐEN - CHỮ TRẮNG - LÚN NÚT) */
+.btn-auth:hover,
+.btn-open-class:hover, 
+.btn-logout:hover,
+.btn-register:hover,
+.btn-common:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px #000000;
+}
+
+/* Trạng thái nút bị khóa (Disabled) khi lớp đã đầy */
+.btn-register:disabled,
+.btn-common:disabled {
+    background: #e5e7eb !important; 
+    color: #9ca3af !important; 
+    border-color: #d1d5db !important; 
+    cursor: not-allowed !important; 
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/* 4. NÚT MŨI TÊN ĐIỀU HƯỚNG SLIDER */
+.arrow-btn {
+    background: #ffffff;
+    border: 2px solid #000000;
+    cursor: pointer;
+    padding: 10px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 3px 3px 0px #000000;
+    transition: 0.1s;
+}
+.arrow-btn svg { 
+    width: 20px; 
+    height: 35px; 
+    transition: 0.1s;
+}
+.arrow-btn:hover {
+    background: #000000 !important;
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px #000000;
+}
+.arrow-btn:hover svg polygon {
+    stroke: #ffffff !important;
+}

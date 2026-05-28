@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Training Time - Đăng ký</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         body {
@@ -54,20 +56,7 @@
             outline: none;
             background-color: white;
         }
-        .btn-register {
-            margin-top: 15px;
-            padding: 8px 30px;
-            font-size: 18px;
-            background-color: #000000;
-            color: #ffffff;
-            border: 2px solid #000000;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-register:hover {
-            background-color: #ffffff;
-            color: #000000;
-        }
+        /* Đã dọn dẹp các CSS trùng lặp của nút bấm cũ */
         .message-output {
             font-size: 16px;
             margin-top: 20px;
@@ -76,13 +65,12 @@
         }
         .footer-text {
             font-size: 16px;
-            margin-top: 35px;
+            margin-top: 40px;
             color: #333333;
-        }
-        .footer-text a {
-            text-decoration: none;
-            color: #000000;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -124,11 +112,11 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-register">Đăng ký</button>
+            <button type="submit" class="btn-common" style="font-size: 18px; padding: 8px 30px; margin-top: 15px;">Đăng ký</button>
             <div class="message-output" id="msgOut"></div>
         </form>
         
-        <div class="footer-text">Đã có tài khoản? <a href="login.html">Đăng nhập</a></div>
+        <div class="footer-text">Đã có tài khoản? <a href="login.html" class="btn-auth">Đăng nhập</a></div>
     </div>
 
     <script src="config.js"></script>
