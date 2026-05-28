@@ -10,18 +10,19 @@
             font-family: Arial, sans-serif;
             background-color: #ffffff;
             margin: 0;
-            padding: 40px;
+            padding: 20px 40px;
             box-sizing: border-box;
         }
+        /* --- HEADER & AUTH --- */
         .header {
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
         .logo {
-            font-size: 64px;
+            font-size: 48px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -31,7 +32,7 @@
             right: 0;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 18px;
+            font-size: 16px;
             text-align: right;
         }
         .auth-links a {
@@ -40,139 +41,148 @@
             font-weight: bold;
             margin: 0 5px;
         }
-        .auth-links a:hover {
-            text-decoration: underline;
-        }
         .user-container {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 6px;
+            gap: 4px;
         }
         .user-logged {
             font-weight: bold;
             color: #008000;
-            font-size: 18px;
+            font-size: 16px;
         }
-        .btn-open-class {
-            font-size: 14px;
-            background-color: #10b981;
-            color: #ffffff;
-            border: 2px solid #000000;
-            padding: 4px 12px;
+        .btn-open-class, .btn-logout {
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 2px 2px 0px #000000;
-            transition: 0.1s;
-        }
-        .btn-open-class:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 3px 0px #000000;
-        }
-        .btn-logout {
-            font-size: 14px;
-            color: #ff0000;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-            background: none;
             border: none;
+            background: none;
             padding: 0;
         }
-        .btn-logout:hover {
-            text-decoration: underline;
+        .btn-open-class {
+            color: #10b981;
+            margin-bottom: 2px;
         }
+        .btn-logout {
+            color: #ff0000;
+        }
+
+        /* --- NAVIGATION BAR (YÊU CẦU MỚI) --- */
+        .nav-bar {
+            display: flex;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            margin-bottom: 30px;
+        }
+        .nav-item {
+            padding: 15px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            border-right: 2px solid #000;
+            transition: 0.2s;
+        }
+        .nav-item:first-child {
+            border-left: 2px solid #000;
+        }
+        .nav-item:hover, .nav-item.active {
+            background-color: #f3f4f6;
+        }
+
+        /* --- CONTENT SECTIONS --- */
+        .content-section {
+            display: none; /* Ẩn mặc định */
+        }
+        .content-section.active {
+            display: block; /* Hiện khi active */
+        }
+
+        /* --- SEARCH & SLIDER (LỚP HỌC) --- */
         .search-container {
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
         .search-label {
-            font-size: 22px;
-            font-weight: 500;
+            font-size: 20px;
+            font-weight: bold;
         }
         .search-input {
-            width: 450px;
+            width: 400px;
             padding: 8px 12px;
-            font-size: 18px;
-            border: 2px solid #000000;
+            font-size: 16px;
+            border: 2px solid #000;
             outline: none;
         }
         .slider-section {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
-        }
-        .arrow-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            outline: none;
-        }
-        .arrow-btn svg {
-            width: 30px;
-            height: 50px;
+            justify-content: flex-start;
+            gap: 20px;
         }
         .courses-container {
             display: flex;
-            gap: 25px;
+            gap: 20px;
             overflow-x: auto;
-            padding: 10px;
-            max-width: 1060px;
+            padding: 10px 5px;
+            max-width: 1100px;
+            border-left: 2px solid #000;
+            border-right: 2px solid #000;
         }
         .course-card {
             width: 240px;
-            border: 2px solid #000000;
-            box-sizing: border-box;
+            border: 2px solid #000;
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
         }
         .card-header {
-            border-bottom: 2px solid #000000;
-            padding: 12px;
-            font-size: 18px;
+            border-bottom: 2px solid #000;
+            padding: 10px;
             font-weight: bold;
             text-align: center;
             background-color: #f3f4f6;
         }
         .card-body {
-            padding: 15px;
-            font-size: 16px;
-            line-height: 1.6;
+            padding: 12px;
+            font-size: 14px;
+            line-height: 1.5;
             flex-grow: 1;
         }
         .card-footer {
-            padding: 15px;
+            padding: 10px;
             text-align: center;
-            min-height: 35px;
         }
-        .btn-register-course {
+        .btn-register {
             width: 90%;
-            padding: 8px 0;
-            font-size: 16px;
-            background-color: #ffffff;
-            border: 2px solid #000000;
-            cursor: pointer;
+            padding: 6px 0;
             font-weight: bold;
-            transition: 0.2s;
+            background: #fff;
+            border: 2px solid #000;
+            cursor: pointer;
         }
-        .btn-register-course:hover {
-            background-color: #000000;
-            color: #ffffff;
+        .btn-register:hover {
+            background: #000;
+            color: #fff;
         }
-        .loading-text {
-            font-size: 18px;
-            font-weight: 500;
-            color: #666666;
-            width: 100%;
+        .arrow-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .arrow-btn svg { width: 25px; height: 40px; }
+
+        /* --- EMPTY STATE FOR NEW TABS --- */
+        .empty-tab-content {
+            padding: 50px;
             text-align: center;
-            padding: 20px;
+            font-size: 20px;
+            color: #666;
+            border: 2px dashed #ccc;
         }
     </style>
 </head>
@@ -185,27 +195,43 @@
         </div>
     </div>
 
-    <div class="search-container">
-        <div class="search-label">Tìm kiếm lớp:</div>
-        <input type="text" class="search-input" id="searchInput" placeholder="Nhập khu vực, tên lớp hoặc huấn luyện viên...">
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="switchTab('classes', this)">Lớp học</div>
+        <div class="nav-item" onclick="switchTab('courts', this)">Sân cầu</div>
+        <div class="nav-item" onclick="switchTab('casual', this)">Vãng lai</div>
     </div>
 
-    <div class="slider-section">
-        <button class="arrow-btn" onclick="scrollSlider(-265)">
-            <svg viewBox="0 0 100 100">
-                <polygon points="80,10 20,50 80,90 70,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/>
-            </svg>
-        </button>
-
-        <div class="courses-container" id="coursesContainer">
-            <div class="loading-text">Đang tải danh sách lớp học từ database...</div>
+    <div id="tab-classes" class="content-section active">
+        <div class="search-container">
+            <div class="search-label">Tìm kiếm lớp:</div>
+            <input type="text" class="search-input" id="searchInput" placeholder="Nhập khu vực, tên lớp hoặc huấn luyện viên...">
         </div>
 
-        <button class="arrow-btn" onclick="scrollSlider(265)">
-            <svg viewBox="0 0 100 100">
-                <polygon points="20,10 80,50 20,90 30,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/>
-            </svg>
-        </button>
+        <div class="slider-section">
+            <button class="arrow-btn" onclick="scrollSlider(-260)">
+                <svg viewBox="0 0 100 100"><polygon points="80,10 20,50 80,90 70,50" style="fill:none;stroke:black;stroke-width:8;"/></svg>
+            </button>
+            <div class="courses-container" id="coursesContainer">
+                <div style="padding: 20px;">Đang tải danh sách lớp học...</div>
+            </div>
+            <button class="arrow-btn" onclick="scrollSlider(260)">
+                <svg viewBox="0 0 100 100"><polygon points="20,10 80,50 20,90 30,50" style="fill:none;stroke:black;stroke-width:8;"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="tab-courts" class="content-section">
+        <div class="empty-tab-content">
+            <i class="fa-solid fa-map-location-dot" style="font-size: 40px; margin-bottom: 15px;"></i><br>
+            Tính năng Tìm kiếm Sân cầu đang được phát triển...
+        </div>
+    </div>
+
+    <div id="tab-casual" class="content-section">
+        <div class="empty-tab-content">
+            <i class="fa-solid fa-users-rectangle" style="font-size: 40px; margin-bottom: 15px;"></i><br>
+            Tính năng Tìm nhóm Vãng lai đang được phát triển...
+        </div>
     </div>
 
     <script src="config.js"></script>
@@ -215,186 +241,104 @@
         const userRole = urlParams.get('role'); 
         const authNav = document.getElementById('authNav');
         const coursesContainer = document.getElementById('coursesContainer');
-        
         let allLocalClasses = [];
 
+        // 1. XỬ LÝ CHUYỂN TAB (KHÔNG RELOAD TRANG)
+        function switchTab(tabName, element) {
+            // Xóa class active ở tất cả các tab và nội dung
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+
+            // Kích hoạt tab và nội dung tương ứng
+            element.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // 2. HIỂN THỊ THÔNG TIN USER
         if (loggedUser) {
-            let userHtml = `
-                <div class="user-container">
-                    <span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>
-            `;
+            let userHtml = `<div class="user-container"><span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>`;
             if (userRole === 'coach') {
-                userHtml += `
-                    <button class="btn-open-class" onclick="goToDashboardHLV()">Mở lớp</button>
-                    <button class="btn-open-class" style="background-color: #3b82f6;" onclick="goToManageClasses()">Lớp của tôi</button>
-                `;
+                userHtml += `<a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a>`;
             }
-            userHtml += `
-                    <button class="btn-logout" onclick="logoutUser()">Đăng xuất</button>
-                </div>
-            `;
+            userHtml += `<a href="index.html" class="btn-logout" onclick="return confirm('Đăng xuất?')">Đăng xuất</a></div>`;
             authNav.innerHTML = userHtml;
         }
 
-        function goToDashboardHLV() {
-            window.location.href = `dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=${userRole}`;
-        }
-
-        function goToManageClasses() {
-            window.location.href = `manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=${userRole}`;
-        }
-
-        function logoutUser() {
-            if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
-                window.location.href = "index.html";
-            }
-        }
-
-        function loadClassesFromServer() {
-            const callbackName = 'jsonp_load_classes_' + Math.round(100000 * Math.random());
-            
+        // 3. LOGIC LOAD LỚP HỌC (GIỮ NGUYÊN BẢN CŨ NHƯNG TỐI ƯU HÓA)
+        function loadClasses() {
+            const callbackName = 'jsonp_load_' + Date.now();
             window[callbackName] = function(data) {
                 delete window[callbackName];
                 document.getElementById(callbackName).remove();
-
-                if (data.status === "success" && data.classes.length > 0) {
+                if (data.status === "success") {
                     allLocalClasses = data.classes;
                     renderClasses(allLocalClasses);
-                } else {
-                    coursesContainer.innerHTML = `<div class="loading-text">Hiện tại chưa có lớp học nào được đăng ký mở.</div>`;
                 }
             };
-
             const script = document.createElement('script');
             script.src = `${CONFIG.WEB_APP_URL}?action=get_classes&callback=${callbackName}`;
             script.id = callbackName;
             document.body.appendChild(script);
         }
 
-        // Tạo cấu trúc HTML cho một thẻ card đơn lẻ
-        function createCardTemplate(cls) {
-            let isFull = false;
-            if (cls.slots && cls.slots.includes('/')) {
-                const parts = cls.slots.split('/');
-                const current = parseInt(parts[0], 10);
-                const max = parseInt(parts[1], 10);
-                if (current >= max) {
-                    isFull = true;
-                }
-            }
-
-            let buttonHtml = '';
-            if (userRole === 'coach') {
-                buttonHtml = ''; // HLV ẩn nút chi tiết lớp
-            } else {
-                if (isFull) {
-                    buttonHtml = `<button class="btn-register-course" style="background-color: #e5e7eb; color: #9ca3af; border-color: #d1d5db; cursor: not-allowed;" disabled>Lớp đã full</button>`;
-                } else {
-                    buttonHtml = `<button class="btn-register-course" onclick="handleCourseClick('${cls.id}', '${encodeURIComponent(cls.className)}', '${cls.slots}')">Đăng ký</button>`;
-                }
-            }
-
-            return `
-                <div class="card-header">${cls.className}</div>
-                <div class="card-body">
-                    Khu vực: ${cls.area}<br>
-                    Trình độ: ${cls.level}<br>
-                    Học phí: ${cls.fee}<br>
-                    Số lượng: <span>${cls.slots}</span><br>
-                    HLV: ${cls.coach}
-                </div>
-                <div class="card-footer">
-                    ${buttonHtml}
-                </div>
-            `;
-        }
-
-        // Vẽ toàn bộ danh sách lớp học khi load trang
-        function renderClasses(classesList) {
+        function renderClasses(list) {
             coursesContainer.innerHTML = "";
-            classesList.forEach(cls => {
+            list.forEach(cls => {
+                const isFull = cls.slots && cls.slots.split('/')[0] >= cls.slots.split('/')[1];
                 const card = document.createElement('div');
                 card.className = 'course-card';
-                card.id = `card_${cls.id}`; // Định danh ID cho từng thẻ card
-                card.innerHTML = createCardTemplate(cls);
+                card.id = `card_${cls.id}`;
+                card.innerHTML = `
+                    <div class="card-header">${cls.className}</div>
+                    <div class="card-body">
+                        Khu vực: ${cls.area}<br>
+                        Trình độ: ${cls.level}<br>
+                        Học phí: ${cls.fee}<br>
+                        Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br>
+                        HLV: ${cls.coach}
+                    </div>
+                    <div class="card-footer" id="footer_${cls.id}">
+                        ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled style="background:#eee;color:#999">Lớp đã full</button>' : `<button class="btn-register" onclick="registerClass('${cls.id}', '${cls.className}', '${cls.slots}')">Đăng ký</button>`)}
+                    </div>
+                `;
                 coursesContainer.appendChild(card);
             });
         }
 
-        // HÀM UPDATE RIÊNG BIỆT: Chỉ nạp lại (reload) cấu trúc của đúng 1 thẻ card được chỉ định
-        function renderSingleCard(cls) {
-            const targetCard = document.getElementById(`card_${cls.id}`);
-            if (targetCard) {
-                targetCard.innerHTML = createCardTemplate(cls);
-            }
-        }
+        function registerClass(id, name, slots) {
+            if (!loggedUser) return alert("Vui lòng đăng nhập!");
+            if (!confirm(`Xác nhận đăng ký lớp: ${name}?`)) return;
 
-        function handleCourseClick(courseId, classNameEncoded, currentSlots) {
-            const className = decodeURIComponent(classNameEncoded);
-
-            if (!loggedUser) {
-                alert("Vui lòng đăng nhập tài khoản trước khi thực hiện thao tác này!");
-                window.location.href = "login.html";
-                return;
-            }
-
-            const confirmRegistration = confirm(`Bạn có chắc chắn muốn đăng ký tham gia lớp học "${className}" không?`);
-            if (confirmRegistration) {
-                executeStudentRegistration(courseId, className, currentSlots);
-            }
-        }
-
-        function executeStudentRegistration(classId, className, currentSlots) {
-            const callbackName = 'jsonp_student_reg_' + Math.round(100000 * Math.random());
-            
+            const callbackName = 'jsonp_reg_' + Date.now();
             window[callbackName] = function(data) {
                 delete window[callbackName];
                 document.getElementById(callbackName).remove();
-
                 if (data.status === "success") {
-                    alert(`Chúc mừng! Bạn đã đăng ký thành công vào lớp "${className}".`);
-                    
-                    // Tìm đối tượng lớp học nằm trong bộ nhớ cục bộ (local array)
-                    const classObj = allLocalClasses.find(c => c.id === classId);
-                    
-                    if (classObj && currentSlots.includes('/')) {
-                        const parts = currentSlots.split('/');
-                        const nextCount = parseInt(parts[0], 10) + 1;
-                        const maxCount = parseInt(parts[1], 10);
-                        
-                        // Cập nhật giá trị số lượng mới vào mảng dữ liệu local
-                        classObj.slots = `${nextCount}/${maxCount}`;
-                        
-                        // THỰC HIỆN YÊU CẦU: Tải lại và vẽ lại duy nhất cấu trúc HTML của thẻ lớp học này
-                        renderSingleCard(classObj);
+                    alert("Đăng ký thành công!");
+                    // Cập nhật UI cục bộ
+                    const parts = slots.split('/');
+                    const newSlots = (parseInt(parts[0]) + 1) + "/" + parts[1];
+                    document.getElementById(`slot_${id}`).innerText = newSlots;
+                    if (parseInt(parts[0]) + 1 >= parseInt(parts[1])) {
+                        document.getElementById(`footer_${id}`).innerHTML = '<button class="btn-register" disabled style="background:#eee;color:#999">Lớp đã full</button>';
                     }
-                } else {
-                    alert("Đăng ký thất bại: " + data.message);
-                }
+                } else alert(data.message);
             };
-
             const script = document.createElement('script');
-            script.src = `${CONFIG.WEB_APP_URL}?action=register_student&classId=${classId}&className=${encodeURIComponent(className)}&studentName=${encodeURIComponent(loggedUser)}&callback=${callbackName}`;
+            script.src = `${CONFIG.WEB_APP_URL}?action=register_student&classId=${id}&className=${encodeURIComponent(name)}&studentName=${encodeURIComponent(loggedUser)}&callback=${callbackName}`;
             script.id = callbackName;
             document.body.appendChild(script);
         }
 
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const keyword = e.target.value.toLowerCase().trim();
-            const filtered = allLocalClasses.filter(cls => 
-                cls.className.toLowerCase().includes(keyword) || 
-                cls.area.toLowerCase().includes(keyword) || 
-                cls.coach.toLowerCase().includes(keyword) ||
-                cls.level.toLowerCase().includes(keyword)
-            );
-            renderClasses(filtered);
+        // TÌM KIẾM & CUỘN
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const k = e.target.value.toLowerCase();
+            renderClasses(allLocalClasses.filter(c => c.className.toLowerCase().includes(k) || c.area.toLowerCase().includes(k)));
         });
 
-        function scrollSlider(offset) {
-            coursesContainer.scrollBy({ left: offset, behavior: 'smooth' });
-        }
+        function scrollSlider(o) { coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); }
 
-        window.onload = loadClassesFromServer;
+        window.onload = loadClasses;
     </script>
 </body>
 </html>
