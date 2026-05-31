@@ -1,8 +1,12 @@
 /* ==========================================================================
-   STYLE.CSS - ĐỒNG BỘ NÚT BẤM & HIỆU ỨNG THEO PHONG CÁCH NEO-BRUTALISM
+   STYLE.CSS - PHONG CÁCH NEO-BRUTALISM (BẢN ĐẦY ĐỦ CHO DESKTOP & MOBILE)
    ========================================================================== */
 
-/* 1. NÚT ĐĂNG NHẬP / ĐĂNG KÝ (AUTH BUTTONS) */
+/* --------------------------------------------------------------------------
+   1. ĐỊNH DẠNG CÁC NÚT BẤM VÀ HIỆU ỨNG GỐC (DÀNH CHO DESKTOP)
+   -------------------------------------------------------------------------- */
+
+/* NÚT ĐĂNG NHẬP / ĐĂNG KÝ (AUTH BUTTONS) */
 .btn-auth {
     display: inline-block;
     text-decoration: none;
@@ -19,7 +23,7 @@
     box-sizing: border-box;
 }
 
-/* 2. NÚT CHỨC NĂNG CHUNG (MỞ LỚP, QUẢN LÝ, ĐĂNG XUẤT, ĐĂNG KÝ LỚP HỌC) */
+/* NÚT CHỨC NĂNG CHUNG (MỞ LỚP, QUẢN LÝ, ĐĂNG XUẤT, ĐĂNG KÝ LỚP HỌC) */
 .btn-open-class, 
 .btn-logout,
 .btn-register,
@@ -50,7 +54,7 @@
     color: #000000;
 }
 
-/* 3. HIỆU ỨNG ANIMATION HOVER CHUNG TOÀN DIỆN (NỀN ĐEN - CHỮ TRẮNG - LÚN NÚT) */
+/* HIỆU ỨNG ANIMATION HOVER CHUNG TOÀN DIỆN (NỀN ĐEN - CHỮ TRẮNG - LÚN NÚT) */
 .btn-auth:hover,
 .btn-open-class:hover, 
 .btn-logout:hover,
@@ -73,7 +77,7 @@
     transform: none !important;
 }
 
-/* 4. NÚT MŨI TÊN ĐIỀU HƯỚNG SLIDER */
+/* NÚT MŨI TÊN ĐIỀU HƯỚNG SLIDER */
 .arrow-btn {
     background: #ffffff;
     border: 2px solid #000000;
@@ -97,4 +101,129 @@
 }
 .arrow-btn:hover svg polygon {
     stroke: #ffffff !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. MÔI TRƯỜNG MOBILE (< 768PX) - TỐI ƯU UI/UX KHÔNG ẢNH HƯỞNG DESKTOP
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 768px) {
+    /* Reset lại khoảng cách đệm lề sát viền màn hình điện thoại */
+    body {
+        padding: 15px 15px 40px 15px !important;
+    }
+
+    /* Chuyển đổi Header sang dạng hàng dọc để không đè chồng phần tử */
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+    .logo {
+        font-size: 32px !important; /* Thu nhỏ tiêu đề vừa khít bề ngang */
+        text-align: center;
+    }
+    .auth-links {
+        position: static !important; /* Hủy absolute để tự động xuống hàng mượt mà */
+        transform: none !important;
+        justify-content: center;
+        width: 100%;
+    }
+    .user-container {
+        align-items: center !important;
+        width: 100%;
+    }
+
+    /* Tối ưu các Tab điều hướng ôm sát và chia đều màn hình ngang */
+    .nav-bar {
+        display: flex !important;
+        width: 100%;
+        gap: 5px !important;
+    }
+    .nav-item {
+        flex: 1;
+        padding: 10px 5px !important;
+        font-size: 15px !important; /* Co chữ lại một chút để tránh rớt dòng */
+        text-align: center;
+    }
+
+    /* Khung tìm kiếm và nút "Gần tôi" xếp dọc vừa vặn */
+    .search-container {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 12px !important;
+        margin-bottom: 25px;
+    }
+    .search-input {
+        width: 100% !important;
+        min-height: 44px; /* Đạt chuẩn độ cao cho tương tác ngón tay */
+        box-sizing: border-box;
+    }
+    .btn-near-me {
+        width: 100% !important;
+        justify-content: center;
+        min-height: 44px;
+    }
+
+    /* BIẾN ĐỔI SLIDER NGANG THÀNH THEO CHIỀU DỌC TRÊN ĐIỆN THOẠI */
+    .slider-wrapper, .slider-section {
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    /* Ẩn hoàn toàn nút mũi tên vì mobile sử dụng thao tác vuốt dọc tự nhiên */
+    .arrow-btn {
+        display: none !important; 
+    }
+
+    /* Hủy cơ chế cuộn ngang và ép các thẻ lớp học xếp thành 1 cột */
+    .courses-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important; /* Triệt tiêu hoàn toàn lỗi tràn viền ngang */
+        padding: 5px 0 !important;
+    }
+
+    /* Ép chiều rộng các thẻ Card giãn full 100% màn hình điện thoại */
+    .course-card {
+        width: 100% !important;
+        min-width: 100% !important;
+        box-shadow: 3px 3px 0px #000000 !important;
+    }
+    
+    /* Tắt dịch chuyển vị trí khi đè giữ (hover) trên cảm ứng tránh giật lag */
+    .course-card:hover {
+        transform: none !important;
+        box-shadow: 3px 3px 0px #000000 !important;
+    }
+
+    /* GIÃN RỘNG TOÀN BỘ CÁC NÚT BẤM ĐỂ DỄ CHẠM (TAP TARGETS) */
+    .btn-auth,
+    .btn-open-class,
+    .btn-logout,
+    .btn-register {
+        width: 100% !important;
+        min-height: 44px !important; /* Đảm bảo diện tích bấm cho ngón tay cái */
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+    
+    .btn-auth:hover,
+    .btn-open-class:hover,
+    .btn-logout:hover,
+    .btn-register:hover {
+        transform: none !important;
+    }
+
+    /* Điều chỉnh vùng thông báo trống trải nghiệm tốt hơn */
+    .empty-tab-content {
+        padding: 30px 15px !important;
+        font-size: 15px !important;
+    }
 }
