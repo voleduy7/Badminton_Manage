@@ -6,19 +6,215 @@
     <title>BAETON Badminton - Trang chủ</title>
     <link rel="stylesheet" href="style.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px 40px;
+            box-sizing: border-box;
+        }
+        /* --- HEADER & AUTH LAYOUT --- */
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .auth-links {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 12px;
+        }
+        .user-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+        .user-logged {
+            font-weight: bold;
+            color: #008000;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        /* --- NAVIGATION BAR (SỬA ĐỂ GIÃN CÁCH CÁC TAB) --- */
+        .nav-wrapper {
+            width: 100%;
+            border-bottom: 2px solid #000000;
+            margin-bottom: 40px;
+        }
+        .nav-bar {
+            display: inline-flex;
+            background-color: #ffffff;
+            gap: 15px; /* Tạo khoảng cách 15px giữa các ô tab */
+        }
+        .nav-item {
+            padding: 12px 35px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid #000000; /* Thay đổi thành border bọc trọn từng ô */
+            border-bottom: none; /* Giữ nguyên không border đáy để dính vào đường gạch ngang wrapper */
+            transition: 0.1s;
+            user-select: none;
+            background-color: #ffffff;
+        }
+        .nav-item:hover, .nav-item.active {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+
+        /* --- CONTENT SECTIONS --- */
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+
+        /* --- SEARCH & LOCATION FILTER CONTAINER --- */
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .search-label {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .search-input {
+            width: 400px;
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 2px solid #000000;
+            outline: none;
+        }
+
+        /* Style nút Gần tôi chuẩn phong cách Neo-brutalism */
+        .btn-near-me {
+            padding: 8px 18px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 3px 3px 0px #000000;
+            cursor: pointer;
+            transition: 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        .btn-near-me:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #000000;
+            background-color: #f3f4f6;
+        }
+        .btn-near-me:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .btn-near-me.active-location {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* --- SLIDER CONTAINER --- */
+        .slider-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .slider-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 100%;
+        }
+        .courses-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 15px 5px;
+            width: 1024px;
+            max-width: calc(100vw - 200px);
+            scrollbar-width: thin;
+        }
+        
+        .course-card {
+            width: 236px;
+            border: 2px solid #000000;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: 4px 4px 0px #000000;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .course-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000000;
+        }
+        .card-header {
+            border-bottom: 2px solid #000000;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+            background-color: #f3f4f6;
+            font-size: 16px;
+            color: #000000;
+            transition: 0.1s;
+        }
+        .course-card:hover .card-header {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .card-body {
+            padding: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        .card-footer {
+            padding: 15px;
+            text-align: center;
+            border-top: 1px dashed #cccccc;
+        }
+
+        /* --- EMPTY STATE --- */
+        .empty-tab-content {
+            padding: 60px;
+            text-align: center;
+            font-size: 18px;
+            color: #555555;
+            border: 2px dashed #000000;
+            background-color: #fafafa;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
     <div class="header">
         <div class="logo">BAETON Badminton</div>
-        <div class="auth-links">
-            <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">
-                <i class="fa-solid fa-moon"></i>
-            </button>
-            <div id="authNav" style="display: flex; gap: 12px;">
-                <a href="login.html" class="btn-auth">Đăng nhập</a>
-                <a href="register.html" class="btn-auth">Đăng ký</a>
-            </div>
+        <div class="auth-links" id="authNav">
+            <a href="login.html" class="btn-auth">Đăng nhập</a>
+            <a href="register.html" class="btn-auth">Đăng ký</a>
         </div>
     </div>
 
@@ -34,43 +230,40 @@
         <div class="search-container">
             <div class="search-label">Tìm kiếm lớp:</div>
             <input type="text" class="search-input" id="searchInput" placeholder="Nhập khu vực, tên lớp hoặc huấn luyện viên...">
-            <button class="btn-near-me"><i class="fa-solid fa-location-crosshairs"></i> Đã định vị</button>
+            
+            <button class="btn-near-me" id="btnNearMe" onclick="sortByProximity()">
+                <i class="fa-solid fa-location-crosshairs"></i> Gần tôi
+            </button>
         </div>
 
         <div class="slider-wrapper">
             <div class="slider-section">
                 <button class="arrow-btn" onclick="scrollSlider(-276)">
-                    <svg viewBox="0 0 100 100"><polygon points="80,10 20,50 80,90 70,50"/></svg>
+                    <svg viewBox="0 0 100 100"><polygon points="80,10 20,50 80,90 70,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/></svg>
                 </button>
+                
                 <div class="courses-container" id="coursesContainer">
-                    <div style="padding: 20px; font-weight: bold;">Đang tải danh sách lớp từ hệ thống...</div>
+                    <div style="padding: 20px; font-weight: bold;">Đang tải danh sách lớp học từ hệ thống...</div>
                 </div>
+                
                 <button class="arrow-btn" onclick="scrollSlider(276)">
-                    <svg viewBox="0 0 100 100"><polygon points="20,10 80,50 20,90 30,50"/></svg>
+                    <svg viewBox="0 0 100 100"><polygon points="20,10 80,50 20,90 30,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/></svg>
                 </button>
             </div>
         </div>
     </div>
 
     <div id="tab-courts" class="content-section">
-        <div class="empty-tab-content">Tính năng Tìm kiếm Sân cầu đang phát triển...</div>
+        <div class="empty-tab-content">
+            <i class="fa-solid fa-map-location-dot" style="font-size: 40px; margin-bottom: 15px;"></i><br>
+            Tính năng Tìm kiếm Sân cầu đang được phát triển...
+        </div>
     </div>
 
     <div id="tab-casual" class="content-section">
-        <div class="empty-tab-content">Tính năng Tìm nhóm Vãng lai đang phát triển...</div>
-    </div>
-
-    <div class="modal-overlay" id="registerModal">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span>XÁC NHẬN ĐĂNG KÝ HỌC</span>
-                <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeModal()"></i>
-            </div>
-            <div class="modal-body" id="modalBodyContent"></div>
-            <div class="modal-footer">
-                <button class="btn-modal-close" onclick="closeModal()">Hủy bỏ</button>
-                <button class="btn-modal-confirm" id="btnSubmitRegistration">Đăng ký</button>
-            </div>
+        <div class="empty-tab-content">
+            <i class="fa-solid fa-users-rectangle" style="font-size: 40px; margin-bottom: 15px;"></i><br>
+            Tính năng Tìm nhóm Vãng lai đang được phát triển...
         </div>
     </div>
 
@@ -82,139 +275,60 @@
         const authNav = document.getElementById('authNav');
         const coursesContainer = document.getElementById('coursesContainer');
         let allLocalClasses = [];
+        let userCoords = null; 
+
+        const DISTRICT_COORDINATES = {
+            "quận 1": { lat: 10.7760, lng: 106.7011 },
+            "quận 3": { lat: 10.7843, lng: 106.6812 },
+            "quận 4": { lat: 10.7578, lng: 106.7067 },
+            "quận 5": { lat: 10.7541, lng: 106.6634 },
+            "quận 6": { lat: 10.7481, lng: 106.6413 },
+            "quận 7": { lat: 10.7340, lng: 106.7214 },
+            "quận 8": { lat: 10.7240, lng: 106.6286 },
+            "quận 10": { lat: 10.7746, lng: 106.6669 },
+            "quận 11": { lat: 10.7629, lng: 106.6507 },
+            "quận 12": { lat: 10.8671, lng: 106.6413 },
+            "bình thạnh": { lat: 10.8106, lng: 106.7091 },
+            "gò vấp": { lat: 10.8388, lng: 106.6657 },
+            "tân bình": { lat: 10.8014, lng: 106.6525 },
+            "quận tân bình": { lat: 10.8014, lng: 106.6525 },
+            "tân phú": { lat: 10.7925, lng: 106.6183 },
+            "bình tân": { lat: 10.7654, lng: 106.5815 },
+            "phú nhuận": { lat: 10.7992, lng: 106.6803 },
+            "thủ đức": { lat: 10.8494, lng: 106.7537 },
+            "nhà bè": { lat: 10.6662, lng: 106.7461 },
+            "bình chánh": { lat: 10.6875, lng: 106.5938 },
+            "hóc môn": { lat: 10.8842, lng: 106.5920 },
+            "củ chi": { lat: 11.0067, lng: 106.5131 }
+        };
+
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
 
         if (loggedUser) {
             let userHtml = `
                 <div class="user-container">
-                    <div class="user-header-row">
-                        <span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>
-            `;
-            
-            if (userRole === 'coach') {
-                userHtml += `
-                        <button class="noti-bell-btn" id="notiBellBtn" onclick="toggleNotiDropdown(event)">
-                            <i class="fa-solid fa-bell"></i>
-                            <span class="noti-badge" id="notiBadgeCount" style="display:none;">0</span>
-                        </button>
-                        <div class="noti-dropdown" id="notiDropdownMenu" onclick="event.stopPropagation()">
-                            <div class="noti-dropdown-header">
-                                <span>Thông báo mới nhận</span>
-                                <span style="cursor:pointer;color:#ef4444;" onclick="toggleNotiDropdown(event)">Đóng</span>
-                            </div>
-                            <div id="notiDropdownContent">
-                                <div class="noti-dropdown-empty">Đang tải thông báo...</div>
-                            </div>
-                        </div>
-                `;
-            }
-            
-            userHtml += `
-                    </div>
+                    <span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>
                     <div style="display: flex; gap: 8px; align-items: center;">
             `;
             
             if (userRole === 'coach') {
                 userHtml += `
                         <a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a>
-                        <a href="manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Lớp của tôi</a>
+                        <a href="manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class" style="color: #000000;">Lớp của tôi</a>
                 `;
             }
+            
             userHtml += `
-                        <a href="index.html" class="btn-logout">Đăng xuất</a>
+                        <a href="index.html" class="btn-logout" onclick="return confirm('Bạn có chắc chắn muốn đăng xuất?')">Đăng xuất</a>
                     </div>
                 </div>
             `;
             authNav.innerHTML = userHtml;
-            
-            if (userRole === 'coach') {
-                loadNotificationsCount();
-            }
-        }
-
-        function loadNotificationsCount() {
-            if (!loggedUser || userRole !== 'coach') return;
-            
-            const callbackName = 'jsonp_noticount_' + Date.now();
-            window[callbackName] = function(data) {
-                delete window[callbackName];
-                document.getElementById(callbackName).remove();
-                
-                if (data.status === "success" && data.notifications) {
-                    const dropdownContent = document.getElementById('notiDropdownContent');
-                    dropdownContent.innerHTML = "";
-                    
-                    const unreadCount = data.notifications.filter(n => n.status === 'unread').length;
-                    const badge = document.getElementById('notiBadgeCount');
-                    
-                    if (unreadCount > 0) {
-                        badge.innerText = unreadCount;
-                        badge.style.display = 'block';
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                    
-                    if (data.notifications.length === 0) {
-                        dropdownContent.innerHTML = `<div class="noti-dropdown-empty">Không có thông báo nào.</div>`;
-                        return;
-                    }
-                    
-                    data.notifications.forEach(noti => {
-                        const item = document.createElement('div');
-                        item.className = `noti-dropdown-item ${noti.status === 'unread' ? 'unread' : ''}`;
-                        item.innerHTML = `
-                            <div>${noti.content}</div>
-                            <div class="noti-dropdown-time">${noti.time}</div>
-                        `;
-                        dropdownContent.appendChild(item);
-                    });
-                }
-            };
-            
-            const script = document.createElement('script');
-            script.src = `${CONFIG.WEB_APP_URL}?action=get_notifications&coachName=${encodeURIComponent(loggedUser)}&callback=${callbackName}`;
-            script.id = callbackName;
-            document.body.appendChild(script);
-        }
-
-        function toggleNotiDropdown(event) {
-            if (event) event.stopPropagation();
-            const menu = document.getElementById('notiDropdownMenu');
-            if (!menu) return;
-
-            menu.classList.toggle('show');
-            
-            if (menu.classList.contains('show')) {
-                const badge = document.getElementById('notiBadgeCount');
-                if (badge) badge.style.display = 'none';
-                
-                document.querySelectorAll('.noti-dropdown-item.unread').forEach(item => {
-                    item.classList.remove('unread');
-                });
-
-                markAllNotificationsAsReadOnBackend();
-            }
-        }
-
-        function markAllNotificationsAsReadOnBackend() {
-            if (!loggedUser || userRole !== 'coach') return;
-
-            const callbackName = 'jsonp_markread_' + Date.now();
-            window[callbackName] = function(data) {
-                delete window[callbackName];
-                document.getElementById(callbackName).remove();
-            };
-
-            const script = document.createElement('script');
-            script.src = `${CONFIG.WEB_APP_URL}?action=mark_notifications_read&coachName=${encodeURIComponent(loggedUser)}&callback=${callbackName}`;
-            script.id = callbackName;
-            document.body.appendChild(script);
-        }
-
-        window.onclick = function(event) {
-            const menu = document.getElementById('notiDropdownMenu');
-            if (menu && menu.classList.contains('show')) {
-                menu.classList.remove('show');
-            }
         }
 
         function loadClasses() {
@@ -233,177 +347,167 @@
             document.body.appendChild(script);
         }
 
-        // ĐỒNG BỘ: Tạo cấu trúc Table chứa đầy đủ thuộc tính data-label phục vụ việc biến hình CSS
-        function renderClasses(list) {
-            coursesContainer.innerHTML = "";
+        function getCoordsFromArea(areaText) {
+            if (!areaText) return null;
+            const cleanArea = areaText.toLowerCase().trim();
+            for (const key in DISTRICT_COORDINATES) {
+                if (cleanArea.includes(key)) {
+                    return DISTRICT_COORDINATES[key];
+                }
+            }
+            return null; 
+        }
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+            if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity; 
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; 
+        }
+
+        function sortByProximity() {
+            const btn = document.getElementById('btnNearMe');
             
-            if(list.length === 0) {
-                coursesContainer.innerHTML = `<div style="padding: 20px; font-weight: bold;">Hiện chưa có lớp học nào được mở.</div>`;
+            if (!navigator.geolocation) {
+                alert("Trình duyệt của bạn không hỗ trợ định vị Geolocation.");
                 return;
             }
 
-            // Tạo phần khung Table chuẩn Responsive
-            const tableElement = document.createElement('table');
-            tableElement.className = 'responsive-table';
-            
-            tableElement.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Tên Lớp Học</th>
-                        <th>Khu Vực</th>
-                        <th>Trình Độ</th>
-                        <th>Học Phí</th>
-                        <th>Số Lượng</th>
-                        <th>HLV</th>
-                        <th>Hành Động</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBodyRowContainer"></tbody>
-            `;
-            coursesContainer.appendChild(tableElement);
-            const tbody = document.getElementById('tableBodyRowContainer');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang định vị...`;
 
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    userCoords = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    btn.classList.add('active-location');
+                    btn.innerHTML = `<i class="fa-solid fa-location-dot"></i> Đã định vị`;
+
+                    let sortedClasses = [...allLocalClasses].sort((a, b) => {
+                        const coordsA = getCoordsFromArea(a.area);
+                        const coordsB = getCoordsFromArea(b.area);
+                        
+                        const distA = coordsA ? getDistance(userCoords.lat, userCoords.lng, coordsA.lat, coordsA.lng) : Infinity;
+                        const distB = coordsB ? getDistance(userCoords.lat, userCoords.lng, coordsB.lat, coordsB.lng) : Infinity;
+                        
+                        return distA - distB; 
+                    });
+
+                    renderClasses(sortedClasses);
+                },
+                (error) => {
+                    btn.innerHTML = `<i class="fa-solid fa-location-crosshairs"></i> Gần tôi`;
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            alert("Vui lòng cấp quyền truy cập vị trí trên trình duyệt để hệ thống tìm kiếm lớp gần bạn nhất.");
+                            break;
+                        default:
+                            alert("Lỗi xác định vị trí. Vui lòng thử lại sau.");
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 8000 }
+            );
+        }
+
+        function renderClasses(list) {
+            coursesContainer.innerHTML = "";
             list.forEach(cls => {
                 let isFull = false;
-                if (cls.slots && cls.slots.includes('/')) {
-                    const parts = cls.slots.split('/');
-                    if(parseInt(parts[0], 10) >= parseInt(parts[1], 10)) isFull = true;
-                }
+                let slotsDisplay = cls.slots ? cls.slots.toString() : "0/0";
                 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td data-label="Tên Lớp Học" class="class-title-cell">${cls.className}</td>
-                    <td data-label="Khu Vực">${cls.area}</td>
-                    <td data-label="Trình Độ">${cls.level}</td>
-                    <td data-label="Học Phí" class="fee-cell">${cls.fee}</td>
-                    <td data-label="Số Lượng"><span id="slot_${cls.id}">${cls.slots}</span></td>
-                    <td data-label="HLV">${cls.coach}</td>
-                    <td data-label="Hành Động" id="footer_${cls.id}">
-                        ${userRole === 'coach' ? '<span style="color:#888; font-style:italic;">HLV không được đăng ký</span>' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="openRegisterPopup('${cls.id}')">Đăng ký</button>`)}
-                    </td>
+                if (slotsDisplay.includes('/')) {
+                    const parts = slotsDisplay.split('/');
+                    if(parseInt(parts[0], 10) >= parseInt(parts[1], 10)) {
+                        isFull = true;
+                    }
+                } else {
+                    slotsDisplay = "0/6"; 
+                }
+
+                let distanceText = "";
+                if (userCoords) {
+                    const classCoords = getCoordsFromArea(cls.area);
+                    if (classCoords) {
+                        const dist = getDistance(userCoords.lat, userCoords.lng, classCoords.lat, classCoords.lng);
+                        if (dist !== Infinity) {
+                            distanceText = `<br><strong style="color:#d97706;"><i class="fa-solid fa-route"></i> Cách bạn:</strong> ~${dist.toFixed(1)} km`;
+                        }
+                    }
+                }
+
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.id = `card_${cls.id}`;
+                card.innerHTML = `
+                    <div class="card-header">${cls.className}</div>
+                    <div class="card-body">
+                        Khu vực: ${cls.area}<br>
+                        Trình độ: ${cls.level}<br>
+                        Học phí: ${cls.fee}<br>
+                        Số lượng: <span id="slot_${cls.id}">${slotsDisplay}</span><br>
+                        HLV: ${cls.coach} ${distanceText}
+                    </div>
+                    <div class="card-footer" id="footer_${cls.id}">
+                        ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="registerClass('${cls.id}', '${cls.className}', '${slotsDisplay}')">Đăng ký</button>`)}
+                    </div>
                 `;
-                tbody.appendChild(tr);
+                coursesContainer.appendChild(card);
             });
         }
 
-        function openRegisterPopup(classId) {
+        function registerClass(id, name, slots) {
             if (!loggedUser) return alert("Vui lòng đăng nhập tài khoản trước khi thực hiện thao tác này!");
-            
-            const cls = allLocalClasses.find(c => c.id === classId);
-            if (!cls) return;
-
-            const modalBody = document.getElementById('modalBodyContent');
-            modalBody.innerHTML = `<div style="text-align:center;padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang lấy hồ sơ...</div>`;
-            document.getElementById('registerModal').classList.add('open');
-
-            const callbackName = 'jsonp_coach_' + Date.now();
-            window[callbackName] = function(data) {
-                delete window[callbackName];
-                document.getElementById(callbackName).remove();
-                
-                let coach = data.coach || {};
-                modalBody.innerHTML = `
-                    <div class="section-title"><i class="fa-solid fa-id-card"></i> Hồ sơ huấn luyện viên</div>
-                    <div class="coach-profile-wrapper">
-                        <img src="${coach.avatar}" class="coach-avatar" alt="Avatar HLV">
-                        <div class="coach-info">
-                            <strong>Họ và tên:</strong> ${cls.coach}<br>
-                            <strong>Tuổi:</strong> ${coach.age}<br>
-                            <strong>Số điện thoại:</strong> ${coach.phone}<br>
-                            <strong>Email:</strong> ${coach.email}<br>
-                            <strong>Thời gian dạy:</strong> ${coach.teachingTime}
-                        </div>
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <strong>Thành tích cá nhân:</strong><br>
-                        <div style="background:#f9f9f9; color:#333; padding:8px; border:1px solid #ddd; font-style:italic; margin-top:4px;">
-                            ${coach.achievements}
-                        </div>
-                    </div>
-                    <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> Thông tin lớp học đăng ký</div>
-                    <div>
-                        <strong>Tên lớp học:</strong> ${cls.className}<br>
-                        <strong>Khu vực:</strong> ${cls.area}<br>
-                        <strong>Trình độ yêu cầu:</strong> ${cls.level}<br>
-                        <strong>Học phí khóa học:</strong> <span style="color:#e11d48; font-weight:bold;">${cls.fee}</span>
-                    </div>
-                `;
-                
-                document.getElementById('btnSubmitRegistration').onclick = function() {
-                    executeRegistration(cls.id, cls.className, cls.coach, cls.slots);
-                };
-            };
-
-            const script = document.createElement('script');
-            script.src = `${CONFIG.WEB_APP_URL}?action=get_coach_detail&coachName=${encodeURIComponent(cls.coach)}&callback=${callbackName}`;
-            script.id = callbackName;
-            document.body.appendChild(script);
-        }
-
-        function closeModal() {
-            document.getElementById('registerModal').classList.remove('open');
-        }
-
-        function executeRegistration(id, name, coachName, currentSlots) {
-            const btn = document.getElementById('btnSubmitRegistration');
-            btn.disabled = true;
-            btn.innerText = `Đang xử lý...`;
+            if (!confirm(`Bạn có chắc chắn muốn đăng ký lớp: ${name}?`)) return;
 
             const callbackName = 'jsonp_reg_' + Date.now();
             window[callbackName] = function(data) {
                 delete window[callbackName];
                 document.getElementById(callbackName).remove();
-                btn.disabled = false;
-                btn.innerText = `Đăng ký`;
-                
                 if (data.status === "success") {
-                    alert("Đăng ký thành công! Huấn luyện viên đã nhận được thông báo lớp học.");
-                    closeModal();
+                    alert("Chúc mừng! Bạn đã đăng ký thành công.");
                     
-                    const parts = currentSlots.split('/');
-                    const newCount = parseInt(parts[0], 10) + 1;
-                    const maxCount = parseInt(parts[1], 10);
-                    const updatedStr = newCount + "/" + maxCount;
+                    const parts = slots.split('/');
+                    const newSlots = (parseInt(parts[0], 10) + 1) + "/" + parts[1];
                     
-                    if(document.getElementById(`slot_${id}`)) {
-                        document.getElementById(`slot_${id}`).innerText = updatedStr;
-                    }
+                    const textElem = document.getElementById(`slot_${id}`);
+                    if(textElem) textElem.innerText = newSlots;
                     
-                    const targetedClass = allLocalClasses.find(c => c.id === id);
-                    if(targetedClass) targetedClass.slots = updatedStr;
+                    const obj = allLocalClasses.find(c => c.id === id);
+                    if(obj) obj.slots = newSlots;
 
-                    if (newCount >= maxCount) {
-                        if(document.getElementById(`footer_${id}`)) {
-                            document.getElementById(`footer_${id}`).innerHTML = '<button class="btn-register" disabled>Lớp đã full</button>';
-                        }
+                    if (parseInt(parts[0], 10) + 1 >= parseInt(parts[1], 10)) {
+                        const footerElem = document.getElementById(`footer_${id}`);
+                        if(footerElem) footerElem.innerHTML = '<button class="btn-register" disabled>Lớp đã full</button>';
                     }
                 } else {
                     alert(data.message);
                 }
             };
-            
             const script = document.createElement('script');
-            script.src = `${CONFIG.WEB_APP_URL}?action=register_student&classId=${id}&className=${encodeURIComponent(name)}&studentName=${encodeURIComponent(loggedUser)}&coachName=${encodeURIComponent(coachName)}&callback=${callbackName}`;
+            script.src = `${CONFIG.WEB_APP_URL}?action=register_student&classId=${id}&className=${encodeURIComponent(name)}&studentName=${encodeURIComponent(loggedUser)}&callback=${callbackName}`;
             script.id = callbackName;
             document.body.appendChild(script);
         }
 
-        function scrollSlider(o) { coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); }
-        function switchTab(t, e) {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            e.classList.add('active');
-            document.getElementById(`tab-${t}`).classList.add('active');
-        }
-        
-        function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
-            const icon = document.querySelector('#themeToggle i');
-            if(document.body.classList.contains('dark-theme')) {
-                icon.className = "fa-solid fa-sun";
-            } else {
-                icon.className = "fa-solid fa-moon";
-            }
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const k = e.target.value.toLowerCase().trim();
+            const filtered = allLocalClasses.filter(c => 
+                c.className.toLowerCase().includes(k) || 
+                c.area.toLowerCase().includes(k) || 
+                c.coach.toLowerCase().includes(k)
+            );
+            renderClasses(filtered);
+        });
+
+        function scrollSlider(o) { 
+            coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); 
         }
 
         window.onload = loadClasses;
