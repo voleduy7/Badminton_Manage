@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý - Giao diện Di động</title>
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+            padding-bottom: 60px; /* Tránh bị che bởi thanh điều hướng nếu có */
+        }
+
+        /* --- Header & Mobile Navigation --- */
+        header {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .hamburger-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        /* Sidebar ẩn mặc định */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 80%;
+            height: 100%;
+            background-color: #ffffff;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            transition: 0.3s ease;
+            z-index: 200;
+            padding: 20px;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            z-index: 150;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1.1rem;
+            display: block;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* --- Main Content Container --- */
+        main {
+            padding: 15px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+
+        /* --- Mobile Card Layout (Thay thế cho Table) --- */
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .data-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: #1e293b;
+            font-size: 1.05rem;
+        }
+
+        .card-badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .card-body p {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-body p span {
+            color: #334155;
+            font-weight: 500;
+        }
+
+        /* --- Form Mobile Optimization --- */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            min-height: 44px; /* Tối ưu độ cao cho ngón tay bấm */
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        /* --- Buttons --- */
+        .btn-block {
+            width: 100%;
+            min-height: 48px;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .btn-block:active {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header điều hướng Mobile -->
+    <header>
+        <div class="logo">Hệ Thống Lớp Học</div>
+        <button class="hamburger-btn" id="menuBtn">☰</button>
+    </header>
+
+    <!-- Overlay & Sidebar Drawer -->
+    <div class="sidebar-overlay" id="overlay"></div>
+    <div class="sidebar" id="sidebar">
+        <h3 style="color: #2563eb;">Menu Chức Năng</h3>
+        <ul class="sidebar-menu">
+            <li><a href="#" onclick="toggleMenu()">Trang Chủ</a></li>
+            <li><a href="#" onclick="toggleMenu()">Danh Sách Lớp Học</a></li>
+            <li><a href="#" onclick="toggleMenu()">Hồ Sơ HLV</a></li>
+            <li><a href="#" onclick="toggleMenu()">Thông Báo</a></li>
+        </ul>
+    </div>
+
+    <!-- Nội dung chính -->
+    <main>
+        <h2>Danh sách lớp học mở rộng (Dạng Thẻ Mobile)</h2>
+        
+        <div class="card-container">
+            <!-- Thẻ Lớp Học Mẫu 1 -->
+            <div class="data-card">
+                <div class="card-header">
+                    <div class="card-title">Lớp Cầu Lông Cơ Bản</div>
+                    <div class="card-badge">Còn 5 chỗ</div>
+                </div>
+                <div class="card-body">
+                    <p>Khu vực: <span>Quận Gò Vấp</span></p>
+                    <p>Trình độ: <span>Cơ bản</span></p>
+                    <p>Học phí: <span>500.000đ</span></p>
+                    <p>HLV: <span>Nguyễn Văn A</span></p>
+                </div>
+                <button class="btn-block" style="margin-top: 12px; min-height: 40px; font-size: 0.9rem;">Đăng ký ngay</button>
+            </div>
+
+            <!-- Thẻ Lớp Học Mẫu 2 -->
+            <div class="data-card">
+                <div class="card-header">
+                    <div class="card-title">Lớp Tennis Nâng Cao</div>
+                    <div class="card-badge" style="background-color: #fee2e2; color: #991b1b;">Hết chỗ</div>
+                </div>
+                <div class="card-body">
+                    <p>Khu vực: <span>Quận 1</span></p>
+                    <p>Trình độ: <span>Nâng cao</span></p>
+                    <p>Học phí: <span>1.200.000đ</span></p>
+                    <p>HLV: <span>Trần Văn B</span></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Logic điều khiển Menu Hamburger mở/đóng Sidebar trên Mobile
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+    </script>
+</body>
+</html>
