@@ -54,20 +54,20 @@
         .user-header-row { display: flex; align-items: center; gap: 12px; position: relative; }
         .user-logged { font-weight: bold; color: #00aa00; font-size: 16px; }
 
-        .noti-bell-btn { background: #ffe600; border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); width: 32px; height: 32px; display: flex; align-items: center; jus[...]
-        .noti-badge { position: absolute; top: -6px; right: -6px; background-color: #ef4444; color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%; font-weight: bold; border: 1px sol[...]
-        .noti-dropdown { position: absolute; top: 40px; right: 0; width: 320px; background-color: var(--card-bg); border: 3px solid var(--border-color); box-shadow: 6px 6px 0px var(--shadow-color)[...]
+        .noti-bell-btn { background: #ffe600; border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 0; padding: 0; }
+        .noti-badge { position: absolute; top: -6px; right: -6px; background-color: #ef4444; color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%; font-weight: bold; border: 1px solid var(--border-color); }
+        .noti-dropdown { position: absolute; top: 40px; right: 0; width: 320px; background-color: var(--card-bg); border: 3px solid var(--border-color); box-shadow: 6px 6px 0px var(--shadow-color); z-index: 9998; display: none; }
         .noti-dropdown.show { display: block; }
-        .noti-dropdown-header { background-color: var(--card-header-bg); padding: 8px 12px; font-weight: bold; font-size: 13px; border-bottom: 2px solid var(--border-color); display: flex; justify[...]
+        .noti-dropdown-header { background-color: var(--card-header-bg); padding: 8px 12px; font-weight: bold; font-size: 13px; border-bottom: 2px solid var(--border-color); display: flex; justify-content: space-between; }
         .noti-dropdown-item { padding: 10px 12px; border-bottom: 1px dashed var(--border-color); font-size: 13px; line-height: 1.4; }
         .noti-dropdown-item.unread { background-color: rgba(255, 230, 0, 0.1); font-weight: bold; }
         .noti-dropdown-time { font-size: 11px; color: #777; margin-top: 4px; text-align: right; }
         .noti-dropdown-empty { padding: 20px; text-align: center; font-style: italic; color: #777; }
 
-        .theme-toggle-btn { background: var(--bg-color); color: var(--text-color); border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); width: 40px; height: 40px; bo[...]
+        .theme-toggle-btn { background: var(--bg-color); color: var(--text-color); border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); width: 40px; height: 40px; border-radius: 0; cursor: pointer; font-size: 18px; }
         .nav-wrapper { width: 100%; border-bottom: 2px solid var(--border-color); margin-bottom: 40px; }
         .nav-bar { display: inline-flex; background-color: var(--bg-color); gap: 15px; }
-        .nav-item { padding: 12px 35px; font-size: 22px; font-weight: bold; cursor: pointer; border: 2px solid var(--border-color); border-bottom: none; transition: 0.1s; user-select: none; backgr[...]
+        .nav-item { padding: 12px 35px; font-size: 22px; font-weight: bold; cursor: pointer; border: 2px solid var(--border-color); border-bottom: none; transition: 0.1s; user-select: none; background-color: #e5e5e5; }
         .nav-item:hover, .nav-item.active { background-color: var(--hover-bg) !important; color: var(--hover-text) !important; }
         .content-section { display: none; }
         .content-section.active { display: block; }
@@ -76,7 +76,7 @@
         .search-label { font-size: 20px; font-weight: bold; }
         .search-input { width: 400px; padding: 8px 12px; font-size: 16px; border: 2px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); outline: none; }
 
-        .btn-near-me { padding: 8px 18px; font-size: 16px; font-weight: bold; background-color: var(--btn-near-me-bg); color: var(--text-color); border: 2px solid var(--border-color); box-shadow: [...]
+        .btn-near-me { padding: 8px 18px; font-size: 16px; font-weight: bold; background-color: var(--btn-near-me-bg); color: var(--text-color); border: 2px solid var(--border-color); box-shadow: 3px 3px 0px var(--shadow-color); cursor: pointer; border-radius: 0; }
         .btn-near-me:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0px var(--shadow-color); }
 
         .slider-wrapper { display: flex; justify-content: center; width: 100%; margin-top: 20px; }
@@ -94,29 +94,29 @@
             align-items: flex-start;
         }
         
-        .arrow-btn { width: 40px; height: 40px; background: var(--bg-color); border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); cursor: pointer; display: flex; ali[...]
+        .arrow-btn { width: 40px; height: 40px; background: var(--bg-color); border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .arrow-btn svg { width: 20px; height: 20px; }
         .arrow-btn svg polygon { stroke: var(--border-color); fill: none; stroke-width: 8; }
 
-        .course-card { width: 236px; border: 2px solid var(--border-color); background-color: var(--card-bg); color: var(--text-color); display: flex; flex-direction: column; flex-shrink: 0; box-[...]
-        .card-header { border-bottom: 2px solid var(--border-color); padding: 10px; font-weight: bold; text-align: center; background-color: var(--card-header-bg); font-size: 16px; color: var(--t[...]
+        .course-card { width: 236px; border: 2px solid var(--border-color); background-color: var(--card-bg); color: var(--text-color); display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 4px 4px 0px var(--shadow-color); }
+        .card-header { border-bottom: 2px solid var(--border-color); padding: 10px; font-weight: bold; text-align: center; background-color: var(--card-header-bg); font-size: 16px; color: var(--text-color); }
         .card-body { padding: 15px; font-size: 14px; line-height: 1.6; flex-grow: 1; }
         .card-footer { padding: 15px; text-align: center; border-top: 1px dashed var(--border-color); }
 
-        .btn-register, .btn-auth, .btn-open-class, .btn-logout, .btn-modal-close, .btn-modal-confirm { border: 2px solid var(--border-color); background: var(--bg-color); color: var(--text-color)[...]
-        .empty-tab-content { padding: 60px; text-align: center; font-size: 18px; color: var(--text-color); border: 2px dashed var(--border-color); background-color: var(--empty-bg); margin-top: 1[...]
+        .btn-register, .btn-auth, .btn-open-class, .btn-logout, .btn-modal-close, .btn-modal-confirm { border: 2px solid var(--border-color); background: var(--bg-color); color: var(--text-color); box-shadow: 2px 2px 0px var(--shadow-color); padding: 8px 16px; font-weight: bold; cursor: pointer; border-radius: 0; }
+        .empty-tab-content { padding: 60px; text-align: center; font-size: 18px; color: var(--text-color); border: 2px dashed var(--border-color); background-color: var(--empty-bg); margin-top: 10px; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay-color); display: flex; justify-content: center; align-items: center; z-index:[...]
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay-color); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .modal-overlay.open { opacity: 1; pointer-events: auto; }
-        .modal-box { background-color: var(--card-bg); border: 4px solid var(--border-color); box-shadow: 8px 8px 0px var(--shadow-color); width: 550px; max-width: 90%; transform: scale(0.9); tra[...]
+        .modal-box { background-color: var(--card-bg); border: 4px solid var(--border-color); box-shadow: 8px 8px 0px var(--shadow-color); width: 550px; max-width: 90%; transform: scale(0.9); transition: transform 0.3s; }
         .modal-overlay.open .modal-box { transform: scale(1); }
-        .modal-header { background-color: var(--modal-header-bg); color: var(--text-color); padding: 15px; font-size: 20px; font-weight: bold; border-bottom: 4px solid var(--border-color); displa[...]
+        .modal-header { background-color: var(--modal-header-bg); color: var(--text-color); padding: 15px; font-size: 20px; font-weight: bold; border-bottom: 4px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; line-height: 1.5; font-size: 15px; color: var(--text-color); }
         .modal-footer { padding: 15px; border-top: 2px dashed var(--border-color); display: flex; justify-content: flex-end; gap: 12px; background-color: var(--card-header-bg); }
         .coach-profile-wrapper { display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px dashed var(--border-color); }
         .coach-avatar { width: 90px; height: 110px; border: 2px solid var(--border-color); box-shadow: 3px 3px 0px var(--shadow-color); object-fit: cover; }
         .coach-info { flex: 1; color: var(--text-color); }
-        .section-title { font-weight: bold; text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; background-color: var(--hover-bg); color: var(--hover-text); padding: 2px 6px; displ[...]
+        .section-title { font-weight: bold; text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; background-color: var(--hover-bg); color: var(--hover-text); padding: 2px 6px; display: inline-block; margin: 10px 0 8px 0; }
         .btn-modal-confirm { background-color: #22c55e !important; color: white !important; }
         
         .no-result-placeholder { padding: 20px; font-weight: bold; width: 100%; text-align: center; color: #888888; line-height: 200px; }
@@ -195,9 +195,9 @@
         const authNav = document.getElementById('authNav');
         const coursesContainer = document.getElementById('coursesContainer');
         let allLocalClasses = [];
-        let originalClasses = [];
+        let allClassesWithoutDistance = []; // Lưu danh sách gốc để không mất dữ liệu
 
-        // Toạ độ dự phòng chuẩn hóa
+        // Toạ độ dự phòng chuẩn hóa (đã tinh chỉnh match lỏng hơn)
         const DISTRICT_COORDINATES = {
             "quan 1": { lat: 10.7760, lng: 106.7011 }, "quan 3": { lat: 10.7843, lng: 106.6812 },
             "quan 4": { lat: 10.7578, lng: 106.7067 }, "quan 5": { lat: 10.7541, lng: 106.6634 },
@@ -234,7 +234,7 @@
             }
             userHtml += `</div><div style="display: flex; gap: 8px; align-items: center;">`;
             if (userRole === 'coach') {
-                userHtml += `<a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a><a href="manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Quản lý lớp</a>`;
+                userHtml += `<a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a><a href="manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Quản lý</a>`;
             }
             userHtml += `<a href="index.html" class="btn-logout">Đăng xuất</a></div></div>`;
             authNav.innerHTML = userHtml;
@@ -251,17 +251,11 @@
                       .trim();
         }
 
-        function getCoordinateFromArea(area) {
-            const areaNormalized = removeVietnameseTones(area);
-            const key = Object.keys(DISTRICT_COORDINATES).find(k => 
-                areaNormalized.indexOf(k) !== -1
-            );
-            return key ? DISTRICT_COORDINATES[key] : null;
-        }
-
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const keyword = removeVietnameseTones(e.target.value);
-            const filtered = allLocalClasses.filter(cls => {
+            // Nếu có khoảng cách (đã click "Tìm gần tôi"), sử dụng allLocalClasses; nếu không, sử dụng allClassesWithoutDistance
+            const sourceList = allLocalClasses.some(cls => cls.distance !== undefined) ? allLocalClasses : allClassesWithoutDistance;
+            const filtered = sourceList.filter(cls => {
                 const targetText = removeVietnameseTones(`${cls.className} ${cls.area} ${cls.coach}`);
                 return targetText.includes(keyword);
             });
@@ -274,8 +268,8 @@
                 delete window[callbackName];
                 document.getElementById(callbackName).remove();
                 if (data.status === "success") {
-                    originalClasses = JSON.parse(JSON.stringify(data.classes));
-                    allLocalClasses = JSON.parse(JSON.stringify(data.classes));
+                    allLocalClasses = data.classes;
+                    allClassesWithoutDistance = [...data.classes]; // Lưu danh sách gốc
                     renderClasses(allLocalClasses);
                 }
             };
@@ -299,12 +293,6 @@
                 }
                 const card = document.createElement('div');
                 card.className = 'course-card';
-                
-                // Hiển thị khoảng cách nếu có
-                const distanceHtml = (cls.distance !== undefined && cls.distance !== null && cls.distance !== Infinity && !isNaN(cls.distance)) 
-                    ? `<br><span style="color:#22c55e;font-weight:bold;display:inline-block;margin-top:6px;">📍 Cách đây: ${cls.distance.toFixed(1)} km</span>` 
-                    : '';
-                
                 card.innerHTML = `
                     <div class="card-header">${cls.className}</div>
                     <div class="card-body">
@@ -313,7 +301,7 @@
                         Học phí: ${cls.fee}<br>
                         Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br>
                         HLV: ${cls.coach}
-                        ${distanceHtml}
+                        ${cls.distance !== undefined && cls.distance !== null && cls.distance !== Infinity && !isNaN(cls.distance) ? `<br><span style="color:#22c55e;font-weight:bold;display:inline-block;margin-top:6px;">📍 Cách đây: ${cls.distance.toFixed(1)} km</span>` : ''}
                     </div>
                     <div class="card-footer" id="footer_${cls.id}">
                         ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="openRegisterPopup('${cls.id}')">Đăng ký</button>`)}
@@ -355,40 +343,36 @@
                     btnText.innerText = "Đã định vị";
                     btnIcon.className = "fa-solid fa-location-dot";
 
-                    if (originalClasses && originalClasses.length > 0) {
-                        // BUG FIX: Tính toán khoảng cách cho TẤT CẢ lớp học
-                        const classesWithDistance = originalClasses.map(cls => {
+                    if (allClassesWithoutDistance && allClassesWithoutDistance.length > 0) {
+                        // Tính toán khoảng cách cho TẤT CẢ lớp học
+                        allLocalClasses = allClassesWithoutDistance.map(cls => {
                             let cLat = parseFloat(cls.lat);
                             let cLon = parseFloat(cls.lon);
                             
-                            // Nếu không có tọa độ hợp lệ
-                            if (isNaN(cLat) || isNaN(cLon) || cLat === 0 || cLon === 0) {
-                                const coord = getCoordinateFromArea(cls.area);
-                                if (coord) {
-                                    cLat = coord.lat;
-                                    cLon = coord.lng;
+                            // Nếu không có tọa độ cứng, bóc tách chuỗi Area để lấy dữ liệu Quận
+                            if (isNaN(cLat) || isNaN(cLon) || cLat === 0) {
+                                const areaNormalized = removeVietnameseTones(cls.area);
+                                for (let k in DISTRICT_COORDINATES) {
+                                    // Kiểm tra xem chuỗi Area có chứa tên quận/huyện tương ứng không
+                                    if (areaNormalized.indexOf(k) !== -1) { 
+                                        cLat = DISTRICT_COORDINATES[k].lat; 
+                                        cLon = DISTRICT_COORDINATES[k].lng; 
+                                        break; 
+                                    }
                                 }
                             }
-                            
-                            // Tính khoảng cách
                             const dist = calculateDistance(userLat, userLon, cLat, cLon);
-                            const newObj = {};
-                            for (let key in cls) {
-                                newObj[key] = cls[key];
-                            }
-                            newObj.distance = dist;
-                            return newObj;
+                            return { ...cls, distance: dist };
                         });
 
-                        // Sắp xếp theo khoảng cách
-                        const sortedClasses = classesWithDistance.sort((a, b) => {
+                        // Sắp xếp danh sách theo khoảng cách
+                        const sortedClasses = [...allLocalClasses].sort((a, b) => {
                             if (a.distance === Infinity) return 1;
                             if (b.distance === Infinity) return -1;
                             return a.distance - b.distance;
                         });
 
-                        // CẬP NHẬT allLocalClasses VÀ RENDER
-                        allLocalClasses = sortedClasses;
+                        // Hiển thị tất cả lớp đã sắp xếp
                         renderClasses(sortedClasses);
                         alert("Đã tính khoảng cách và sắp xếp các lớp học gần bạn nhất!");
                     }
@@ -458,7 +442,7 @@
 
         function closeModal() { document.getElementById('registerModal').classList.remove('open'); }
         function scrollSlider(o) { coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); }
-        function switchTab(t, e) { document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active')); e.classList.add('active'); document.getElementById(`tab-${t}`).classList.add('active'); }
+        function switchTab(t, e) { document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active')); document.getElementById(`tab-${t}`).classList.add('active'); e.classList.add('active'); }
         function toggleTheme() { document.body.classList.toggle('dark-theme'); }
         
         function executeRegistration(id, name, coachName, currentSlots) {
