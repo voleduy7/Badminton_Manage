@@ -82,7 +82,6 @@
         .slider-wrapper { display: flex; justify-content: center; width: 100%; margin-top: 20px; }
         .slider-section { display: flex; align-items: center; gap: 15px; max-width: 100%; }
         
-        /* Khung chứa cố định chiều cao tối thiểu để UI không bị trồi sụt khi rỗng */
         .courses-container { 
             display: flex; 
             gap: 20px; 
@@ -197,7 +196,7 @@
         const coursesContainer = document.getElementById('coursesContainer');
         let allLocalClasses = [];
 
-        // Dữ liệu mốc toạ độ tĩnh phục vụ định vị dựa trên chuỗi văn bản Quận HCMC
+        // Toạ độ dự phòng chuẩn hóa (đã tinh chỉnh match lỏng hơn)
         const DISTRICT_COORDINATES = {
             "quan 1": { lat: 10.7760, lng: 106.7011 }, "quan 3": { lat: 10.7843, lng: 106.6812 },
             "quan 4": { lat: 10.7578, lng: 106.7067 }, "quan 5": { lat: 10.7541, lng: 106.6634 },
@@ -241,7 +240,6 @@
             if (userRole === 'coach') loadNotificationsCount();
         }
 
-        // Loại bỏ dấu Tiếng Việt phục vụ so khớp gần đúng
         function removeVietnameseTones(str) {
             if (!str) return "";
             return str.normalize("NFD")
@@ -252,7 +250,6 @@
                       .trim();
         }
 
-        // Xử lý Tìm kiếm So khớp gần đúng
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const keyword = removeVietnameseTones(e.target.value);
             const filtered = allLocalClasses.filter(cls => {
@@ -300,7 +297,7 @@
                         Học phí: ${cls.fee}<br>
                         Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br>
                         HLV: ${cls.coach}
-                        ${cls.distance !== undefined && cls.distance !== null && cls.distance !== Infinity ? `<br><span style="color:#22c55e;font-weight:bold;display:inline-block;margin-top:4px;"><i class="fa-solid fa-location-dot"></i> Cách đây: ${cls.distance.toFixed(1)} km</span>` : ''}
+                        ${cls.distance !== undefined && cls.distance !== null && cls.distance !== Infinity && !isNaN(cls.distance) ? `<br><span style="color:#22c55e;font-weight:bold;display:inline-block;margin-top:4px;"><i class="fa-solid fa-location-dot"></i> Cách đây: ${cls.distance.toFixed(1)} km</span>` : ''}
                     </div>
                     <div class="card-footer" id="footer_${cls.id}">
                         ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="openRegisterPopup('${cls.id}')">Đăng ký</button>`)}
@@ -311,7 +308,8 @@
         }
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity;
+            if (lat1 === undefined || lon1 === undefined || lat2 === undefined || lon2 === undefined) return Infinity;
+            if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) return Infinity;
             const R = 6371; 
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
@@ -342,15 +340,16 @@
                     btnIcon.className = "fa-solid fa-location-dot";
 
                     if (allLocalClasses && allLocalClasses.length > 0) {
-                        // CẬP NHẬT: Gán trực tiếp khoảng cách tính toán vào TẤT CẢ các thẻ trong mảng gốc
                         allLocalClasses = allLocalClasses.map(cls => {
                             let cLat = parseFloat(cls.lat);
                             let cLon = parseFloat(cls.lon);
                             
-                            if (isNaN(cLat) || isNaN(cLon)) {
+                            // FIX: Nếu không có tọa độ cứng, bóc tách chuỗi Area một cách lỏng lẻo hơn để lấy dữ liệu Quận
+                            if (isNaN(cLat) || isNaN(cLon) || cLat === 0) {
                                 const areaNormalized = removeVietnameseTones(cls.area);
                                 for (let k in DISTRICT_COORDINATES) {
-                                    if (areaNormalized.includes(k)) { 
+                                    // Kiểm tra xem chuỗi Area có chứa tên quận/huyện tương ứng không
+                                    if (areaNormalized.indexOf(k) !== -1) { 
                                         cLat = DISTRICT_COORDINATES[k].lat; 
                                         cLon = DISTRICT_COORDINATES[k].lng; 
                                         break; 
@@ -361,8 +360,11 @@
                             return { ...cls, distance: dist };
                         });
 
-                        // Sắp xếp bản sao danh sách để render theo khoảng cách tăng dần
-                        const sortedClasses = [...allLocalClasses].sort((a, b) => a.distance - b.distance);
+                        const sortedClasses = [...allLocalClasses].sort((a, b) => {
+                            if (a.distance === Infinity) return 1;
+                            if (b.distance === Infinity) return -1;
+                            return a.distance - b.distance;
+                        });
 
                         renderClasses(sortedClasses);
                         alert("Đã tính khoảng cách và sắp xếp các lớp học gần bạn nhất!");
@@ -377,7 +379,6 @@
             );
         }
 
-        // POPUP XỬ LÝ LẤY HỒ SƠ HLV CHI TIẾT TỪ DATABASE
         function openRegisterPopup(classId) {
             if (!loggedUser) return alert("Vui lòng đăng nhập tài khoản trước khi thực hiện thao tác này!");
             
