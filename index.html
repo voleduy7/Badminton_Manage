@@ -7,138 +7,214 @@
     <link rel="stylesheet" href="style.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #000000;
-            --border-color: #000000;
-            --card-header-bg: #f3f4f6;
-            --card-bg: #ffffff;
-            --hover-bg: #000000;
-            --hover-text: #ffffff;
-            --empty-bg: #fafafa;
-            --btn-near-me-bg: #ffffff;
-            --shadow-color: #000000;
-            --overlay-color: rgba(0, 0, 0, 0.4);
-            --modal-header-bg: #ffe600;
-        }
-
-        body.dark-theme {
-            --bg-color: #121212;          
-            --text-color: #ffffff;        
-            --border-color: #ffffff;      
-            --card-header-bg: #1e1e1e;   
-            --card-bg: #1a1a1a;          
-            --hover-bg: #ffffff;          
-            --hover-text: #000000;
-            --empty-bg: #1a1a1a;
-            --btn-near-me-bg: #1e1e1e;
-            --shadow-color: #ffffff;      
-            --overlay-color: rgba(0, 0, 0, 0.7);
-            --modal-header-bg: #2d2d2d;
-        }
-
         body {
             font-family: Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #ffffff;
             margin: 0;
             padding: 20px 40px;
             box-sizing: border-box;
-            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+        }
+        /* --- HEADER & AUTH LAYOUT --- */
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .auth-links {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 12px;
+        }
+        .user-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+        .user-logged {
+            font-weight: bold;
+            color: #008000;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        /* --- NAVIGATION BAR (SỬA ĐỂ GIÃN CÁCH CÁC TAB) --- */
+        .nav-wrapper {
+            width: 100%;
+            border-bottom: 2px solid #000000;
+            margin-bottom: 40px;
+        }
+        .nav-bar {
+            display: inline-flex;
+            background-color: #ffffff;
+            gap: 15px; /* Tạo khoảng cách 15px giữa các ô tab */
+        }
+        .nav-item {
+            padding: 12px 35px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid #000000; /* Thay đổi thành border bọc trọn từng ô */
+            border-bottom: none; /* Giữ nguyên không border đáy để dính vào đường gạch ngang wrapper */
+            transition: 0.1s;
+            user-select: none;
+            background-color: #ffffff;
+        }
+        .nav-item:hover, .nav-item.active {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+
+        /* --- CONTENT SECTIONS --- */
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+
+        /* --- SEARCH & LOCATION FILTER CONTAINER --- */
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .search-label {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .search-input {
+            width: 400px;
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 2px solid #000000;
+            outline: none;
+        }
+
+        /* Style nút Gần tôi chuẩn phong cách Neo-brutalism */
+        .btn-near-me {
+            padding: 8px 18px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 3px 3px 0px #000000;
+            cursor: pointer;
+            transition: 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        .btn-near-me:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #000000;
+            background-color: #f3f4f6;
+        }
+        .btn-near-me:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .btn-near-me.active-location {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* --- SLIDER CONTAINER --- */
+        .slider-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .slider-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 100%;
+        }
+        .courses-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 15px 5px;
+            width: 1024px;
+            max-width: calc(100vw - 200px);
+            scrollbar-width: thin;
         }
         
-        .header { display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 30px; margin-top: 10px; }
-        .logo { font-size: 48px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        .auth-links { position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 15px; }
-        .user-container { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-        .user-header-row { display: flex; align-items: center; gap: 12px; position: relative; }
-        .user-logged { font-weight: bold; color: #00aa00; font-size: 16px; }
-
-        .noti-bell-btn { background: #ffe600; border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 4px; }
-        .noti-badge { position: absolute; top: -6px; right: -6px; background-color: #ef4444; color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%; font-weight: bold; border: 1px solid white; }
-        .noti-dropdown { position: absolute; top: 40px; right: 0; width: 320px; background-color: var(--card-bg); border: 3px solid var(--border-color); box-shadow: 6px 6px 0px var(--shadow-color); display: none; z-index: 1001; max-height: 400px; overflow-y: auto; }
-        .noti-dropdown.show { display: block; }
-        .noti-dropdown-header { background-color: var(--card-header-bg); padding: 8px 12px; font-weight: bold; font-size: 13px; border-bottom: 2px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .noti-dropdown-item { padding: 10px 12px; border-bottom: 1px dashed var(--border-color); font-size: 13px; line-height: 1.4; }
-        .noti-dropdown-item.unread { background-color: rgba(255, 230, 0, 0.1); font-weight: bold; }
-        .noti-dropdown-time { font-size: 11px; color: #777; margin-top: 4px; text-align: right; }
-        .noti-dropdown-empty { padding: 20px; text-align: center; font-style: italic; color: #777; }
-
-        .theme-toggle-btn { background: var(--bg-color); color: var(--text-color); border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); width: 40px; height: 40px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.1s; }
-        .theme-toggle-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0px var(--shadow-color); }
-        .nav-wrapper { width: 100%; border-bottom: 2px solid var(--border-color); margin-bottom: 40px; }
-        .nav-bar { display: inline-flex; background-color: var(--bg-color); gap: 15px; }
-        .nav-item { padding: 12px 35px; font-size: 22px; font-weight: bold; cursor: pointer; border: 2px solid var(--border-color); border-bottom: none; transition: 0.1s; user-select: none; background-color: var(--bg-color); color: var(--text-color); }
-        .nav-item:hover, .nav-item.active { background-color: var(--hover-bg) !important; color: var(--hover-text) !important; }
-        .content-section { display: none; }
-        .content-section.active { display: block; }
-
-        .search-container { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
-        .search-label { font-size: 20px; font-weight: bold; }
-        .search-input { width: 400px; padding: 8px 12px; font-size: 16px; border: 2px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); outline: none; }
-
-        .btn-near-me { padding: 8px 18px; font-size: 16px; font-weight: bold; background-color: var(--btn-near-me-bg); color: var(--text-color); border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); cursor: pointer; transition: 0.1s; border-radius: 4px; }
-        .btn-near-me:hover { background-color: var(--hover-bg); color: var(--hover-text); transform: translate(-1px, -1px); box-shadow: 3px 3px 0px var(--shadow-color); }
-        .btn-near-me:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0px var(--shadow-color); }
-
-        .slider-wrapper { display: flex; justify-content: center; width: 100%; margin-top: 20px; }
-        .slider-section { display: flex; align-items: center; gap: 15px; max-width: 100%; }
-        
-        .courses-container { 
-            display: flex; 
-            gap: 20px; 
-            overflow-x: auto; 
-            padding: 15px 5px; 
-            width: 1024px; 
-            max-width: calc(100vw - 200px); 
-            scrollbar-width: thin; 
-            min-height: 290px; 
-            align-items: flex-start;
+        .course-card {
+            width: 236px;
+            border: 2px solid #000000;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: 4px 4px 0px #000000;
+            transition: transform 0.1s, box-shadow 0.1s;
         }
-        
-        .arrow-btn { width: 40px; height: 40px; background: var(--bg-color); border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--shadow-color); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.1s; border-radius: 4px; }
-        .arrow-btn svg { width: 20px; height: 20px; }
-        .arrow-btn svg polygon { stroke: var(--border-color); fill: none; stroke-width: 8; }
+        .course-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000000;
+        }
+        .card-header {
+            border-bottom: 2px solid #000000;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+            background-color: #f3f4f6;
+            font-size: 16px;
+            color: #000000;
+            transition: 0.1s;
+        }
+        .course-card:hover .card-header {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .card-body {
+            padding: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        .card-footer {
+            padding: 15px;
+            text-align: center;
+            border-top: 1px dashed #cccccc;
+        }
 
-        .course-card { width: 236px; border: 2px solid var(--border-color); background-color: var(--card-bg); color: var(--text-color); display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 2px 2px 0px var(--shadow-color); transition: 0.1s; border-radius: 4px; }
-        .course-card:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px var(--shadow-color); }
-        .card-header { border-bottom: 2px solid var(--border-color); padding: 10px; font-weight: bold; text-align: center; background-color: var(--card-header-bg); font-size: 16px; color: var(--text-color); }
-        .card-body { padding: 15px; font-size: 14px; line-height: 1.6; flex-grow: 1; }
-        .card-footer { padding: 15px; text-align: center; border-top: 1px dashed var(--border-color); }
-
-        .btn-register, .btn-auth, .btn-open-class, .btn-logout, .btn-modal-close, .btn-modal-confirm { border: 2px solid var(--border-color); background: var(--bg-color); color: var(--text-color); padding: 6px 12px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.1s; border-radius: 4px; }
-        .empty-tab-content { padding: 60px; text-align: center; font-size: 18px; color: var(--text-color); border: 2px dashed var(--border-color); background-color: var(--empty-bg); margin-top: 10px; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay-color); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-        .modal-overlay.open { opacity: 1; pointer-events: auto; }
-        .modal-box { background-color: var(--card-bg); border: 4px solid var(--border-color); box-shadow: 8px 8px 0px var(--shadow-color); width: 550px; max-width: 90%; transform: scale(0.9); transition: transform 0.2s; border-radius: 4px; }
-        .modal-overlay.open .modal-box { transform: scale(1); }
-        .modal-header { background-color: var(--modal-header-bg); color: var(--text-color); padding: 15px; font-size: 20px; font-weight: bold; border-bottom: 4px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; line-height: 1.5; font-size: 15px; color: var(--text-color); }
-        .modal-footer { padding: 15px; border-top: 2px dashed var(--border-color); display: flex; justify-content: flex-end; gap: 12px; background-color: var(--card-header-bg); }
-        .coach-profile-wrapper { display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px dashed var(--border-color); }
-        .coach-avatar { width: 90px; height: 110px; border: 2px solid var(--border-color); box-shadow: 3px 3px 0px var(--shadow-color); object-fit: cover; }
-        .coach-info { flex: 1; color: var(--text-color); }
-        .section-title { font-weight: bold; text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; background-color: var(--hover-bg); color: var(--hover-text); padding: 2px 6px; display: inline-block; margin-bottom: 10px; }
-        .btn-modal-confirm { background-color: #22c55e !important; color: white !important; }
-        
-        .no-result-placeholder { padding: 20px; font-weight: bold; width: 100%; text-align: center; color: #888888; line-height: 200px; }
-        
-        .distance-text { color: #22c55e; font-weight: bold; display: block; margin-top: 8px; }
+        /* --- EMPTY STATE --- */
+        .empty-tab-content {
+            padding: 60px;
+            text-align: center;
+            font-size: 18px;
+            color: #555555;
+            border: 2px dashed #000000;
+            background-color: #fafafa;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="logo">BAETON Badminton</div>
-        <div class="auth-links">
-            <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">
-                <i class="fa-solid fa-moon"></i>
-            </button>
-            <div id="authNav" style="display: flex; gap: 12px;">
-                <a href="login.html" class="btn-auth">Đăng nhập</a>
-                <a href="register.html" class="btn-auth">Đăng ký</a>
-            </div>
+        <div class="auth-links" id="authNav">
+            <a href="login.html" class="btn-auth">Đăng nhập</a>
+            <a href="register.html" class="btn-auth">Đăng ký</a>
         </div>
     </div>
 
@@ -155,40 +231,39 @@
             <div class="search-label">Tìm kiếm lớp:</div>
             <input type="text" class="search-input" id="searchInput" placeholder="Nhập khu vực, tên lớp hoặc huấn luyện viên...">
             
-            <button class="btn-near-me" id="btnNearMe" onclick="getUserLocation()">
-                <i class="fa-solid fa-location-crosshairs"></i> <span id="btnNearMeText">Tìm gần tôi</span>
+            <button class="btn-near-me" id="btnNearMe" onclick="sortByProximity()">
+                <i class="fa-solid fa-location-crosshairs"></i> Gần tôi
             </button>
         </div>
 
         <div class="slider-wrapper">
             <div class="slider-section">
                 <button class="arrow-btn" onclick="scrollSlider(-276)">
-                    <svg viewBox="0 0 100 100"><polygon points="80,10 20,50 80,90 70,50"/></svg>
+                    <svg viewBox="0 0 100 100"><polygon points="80,10 20,50 80,90 70,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/></svg>
                 </button>
+                
                 <div class="courses-container" id="coursesContainer">
-                    <div style="padding: 20px; font-weight: bold;">Đang tải danh sách lớp từ hệ thống...</div>
+                    <div style="padding: 20px; font-weight: bold;">Đang tải danh sách lớp học từ hệ thống...</div>
                 </div>
+                
                 <button class="arrow-btn" onclick="scrollSlider(276)">
-                    <svg viewBox="0 0 100 100"><polygon points="20,10 80,50 20,90 30,50"/></svg>
+                    <svg viewBox="0 0 100 100"><polygon points="20,10 80,50 20,90 30,50" style="fill:none;stroke:black;stroke-width:8;stroke-linejoin:round;"/></svg>
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="tab-courts" class="content-section"><div class="empty-tab-content">Tính năng Tìm kiếm Sân cầu đang phát triển...</div></div>
-    <div id="tab-casual" class="content-section"><div class="empty-tab-content">Tính năng Tìm nhóm Vãng lai đang phát triển...</div></div>
+    <div id="tab-courts" class="content-section">
+        <div class="empty-tab-content">
+            <i class="fa-solid fa-map-location-dot" style="font-size: 40px; margin-bottom: 15px;"></i><br>
+            Tính năng Tìm kiếm Sân cầu đang được phát triển...
+        </div>
+    </div>
 
-    <div class="modal-overlay" id="registerModal">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span>XÁC NHẬN ĐĂNG KÝ HỌC</span>
-                <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeModal()"></i>
-            </div>
-            <div class="modal-body" id="modalBodyContent"></div>
-            <div class="modal-footer">
-                <button class="btn-modal-close" onclick="closeModal()">Hủy bỏ</button>
-                <button class="btn-modal-confirm" id="btnSubmitRegistration">Đăng ký</button>
-            </div>
+    <div id="tab-casual" class="content-section">
+        <div class="empty-tab-content">
+            <i class="fa-solid fa-users-rectangle" style="font-size: 40px; margin-bottom: 15px;"></i><br>
+            Tính năng Tìm nhóm Vãng lai đang được phát triển...
         </div>
     </div>
 
@@ -200,71 +275,61 @@
         const authNav = document.getElementById('authNav');
         const coursesContainer = document.getElementById('coursesContainer');
         let allLocalClasses = [];
-        let allClassesWithoutDistance = [];
-        let hasDistanceCalculated = false;
+        let userCoords = null; 
 
         const DISTRICT_COORDINATES = {
-            "quan 1": { lat: 10.7760, lng: 106.7011 }, "quan 3": { lat: 10.7843, lng: 106.6812 },
-            "quan 4": { lat: 10.7578, lng: 106.7067 }, "quan 5": { lat: 10.7541, lng: 106.6634 },
-            "quan 6": { lat: 10.7481, lng: 106.6413 }, "quan 7": { lat: 10.7340, lng: 106.7214 },
-            "quan 8": { lat: 10.7240, lng: 106.6286 }, "quan 10": { lat: 10.7746, lng: 106.6669 },
-            "quan 11": { lat: 10.7629, lng: 106.6507 }, "quan 12": { lat: 10.8671, lng: 106.6413 },
-            "binh thanh": { lat: 10.8106, lng: 106.7091 }, "go vap": { lat: 10.8388, lng: 106.6657 },
-            "tan binh": { lat: 10.8014, lng: 106.6525 }, "tan phu": { lat: 10.7925, lng: 106.6183 },
-            "binh tan": { lat: 10.7654, lng: 106.5815 }, "phu nhuan": { lat: 10.7992, lng: 106.6803 },
-            "thu duc": { lat: 10.8494, lng: 106.7537 }, "nha be": { lat: 10.6662, lng: 106.7461 },
-            "binh chanh": { lat: 10.6875, lng: 106.5938 }, "hoc mon": { lat: 10.8842, lng: 106.5920 }
+            "quận 1": { lat: 10.7760, lng: 106.7011 },
+            "quận 3": { lat: 10.7843, lng: 106.6812 },
+            "quận 4": { lat: 10.7578, lng: 106.7067 },
+            "quận 5": { lat: 10.7541, lng: 106.6634 },
+            "quận 6": { lat: 10.7481, lng: 106.6413 },
+            "quận 7": { lat: 10.7340, lng: 106.7214 },
+            "quận 8": { lat: 10.7240, lng: 106.6286 },
+            "quận 10": { lat: 10.7746, lng: 106.6669 },
+            "quận 11": { lat: 10.7629, lng: 106.6507 },
+            "quận 12": { lat: 10.8671, lng: 106.6413 },
+            "bình thạnh": { lat: 10.8106, lng: 106.7091 },
+            "gò vấp": { lat: 10.8388, lng: 106.6657 },
+            "tân bình": { lat: 10.8014, lng: 106.6525 },
+            "quận tân bình": { lat: 10.8014, lng: 106.6525 },
+            "tân phú": { lat: 10.7925, lng: 106.6183 },
+            "bình tân": { lat: 10.7654, lng: 106.5815 },
+            "phú nhuận": { lat: 10.7992, lng: 106.6803 },
+            "thủ đức": { lat: 10.8494, lng: 106.7537 },
+            "nhà bè": { lat: 10.6662, lng: 106.7461 },
+            "bình chánh": { lat: 10.6875, lng: 106.5938 },
+            "hóc môn": { lat: 10.8842, lng: 106.5920 },
+            "củ chi": { lat: 11.0067, lng: 106.5131 }
         };
+
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
 
         if (loggedUser) {
             let userHtml = `
                 <div class="user-container">
-                    <div class="user-header-row">
-                        <span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>
+                    <span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>
+                    <div style="display: flex; gap: 8px; align-items: center;">
             `;
+            
             if (userRole === 'coach') {
                 userHtml += `
-                        <button class="noti-bell-btn" id="notiBellBtn" onclick="toggleNotiDropdown(event)">
-                            <i class="fa-solid fa-bell"></i>
-                            <span class="noti-badge" id="notiBadgeCount" style="display:none;">0</span>
-                        </button>
-                        <div class="noti-dropdown" id="notiDropdownMenu" onclick="event.stopPropagation()">
-                            <div class="noti-dropdown-header">
-                                <span>Thông báo mới nhận</span>
-                                <span style="cursor:pointer;color:#ef4444;" onclick="toggleNotiDropdown(event)">Đóng</span>
-                            </div>
-                            <div id="notiDropdownContent"><div class="noti-dropdown-empty">Đang tải thông báo...</div></div>
-                        </div>
+                        <a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a>
+                        <a href="manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class" style="color: #000000;">Lớp của tôi</a>
                 `;
             }
-            userHtml += `</div><div style="display: flex; gap: 8px; align-items: center;">`;
-            if (userRole === 'coach') {
-                userHtml += `<a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a><a href="manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Quản lý</a>`;
-            }
-            userHtml += `<a href="index.html" class="btn-logout">Đăng xuất</a></div></div>`;
+            
+            userHtml += `
+                        <a href="index.html" class="btn-logout" onclick="return confirm('Bạn có chắc chắn muốn đăng xuất?')">Đăng xuất</a>
+                    </div>
+                </div>
+            `;
             authNav.innerHTML = userHtml;
-            if (userRole === 'coach') loadNotificationsCount();
         }
-
-        function removeVietnameseTones(str) {
-            if (!str) return "";
-            return str.normalize("NFD")
-                      .replace(/[\u0300-\u0301-\u0303-\u0309-\u0323]/g, "")
-                      .replace(/đ/g, "d").replace(/Đ/g, "d")
-                      .toLowerCase()
-                      .replace(/\s+/g, ' ')
-                      .trim();
-        }
-
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const keyword = removeVietnameseTones(e.target.value);
-            const sourceList = hasDistanceCalculated ? allLocalClasses : allClassesWithoutDistance;
-            const filtered = sourceList.filter(cls => {
-                const targetText = removeVietnameseTones(`${cls.className} ${cls.area} ${cls.coach}`);
-                return targetText.includes(keyword);
-            });
-            renderClasses(filtered);
-        });
 
         function loadClasses() {
             const callbackName = 'jsonp_load_' + Date.now();
@@ -273,8 +338,6 @@
                 document.getElementById(callbackName).remove();
                 if (data.status === "success") {
                     allLocalClasses = data.classes;
-                    allClassesWithoutDistance = [...data.classes];
-                    hasDistanceCalculated = false;
                     renderClasses(allLocalClasses);
                 }
             };
@@ -284,195 +347,169 @@
             document.body.appendChild(script);
         }
 
+        function getCoordsFromArea(areaText) {
+            if (!areaText) return null;
+            const cleanArea = areaText.toLowerCase().trim();
+            for (const key in DISTRICT_COORDINATES) {
+                if (cleanArea.includes(key)) {
+                    return DISTRICT_COORDINATES[key];
+                }
+            }
+            return null; 
+        }
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+            if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity; 
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; 
+        }
+
+        function sortByProximity() {
+            const btn = document.getElementById('btnNearMe');
+            
+            if (!navigator.geolocation) {
+                alert("Trình duyệt của bạn không hỗ trợ định vị Geolocation.");
+                return;
+            }
+
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang định vị...`;
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    userCoords = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    btn.classList.add('active-location');
+                    btn.innerHTML = `<i class="fa-solid fa-location-dot"></i> Đã định vị`;
+
+                    let sortedClasses = [...allLocalClasses].sort((a, b) => {
+                        const coordsA = getCoordsFromArea(a.area);
+                        const coordsB = getCoordsFromArea(b.area);
+                        
+                        const distA = coordsA ? getDistance(userCoords.lat, userCoords.lng, coordsA.lat, coordsA.lng) : Infinity;
+                        const distB = coordsB ? getDistance(userCoords.lat, userCoords.lng, coordsB.lat, coordsB.lng) : Infinity;
+                        
+                        return distA - distB; 
+                    });
+
+                    renderClasses(sortedClasses);
+                },
+                (error) => {
+                    btn.innerHTML = `<i class="fa-solid fa-location-crosshairs"></i> Gần tôi`;
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            alert("Vui lòng cấp quyền truy cập vị trí trên trình duyệt để hệ thống tìm kiếm lớp gần bạn nhất.");
+                            break;
+                        default:
+                            alert("Lỗi xác định vị trí. Vui lòng thử lại sau.");
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 8000 }
+            );
+        }
+
         function renderClasses(list) {
             coursesContainer.innerHTML = "";
-            if (list.length === 0) { 
-                coursesContainer.innerHTML = `<div class="no-result-placeholder">Không tìm thấy lớp học phù hợp.</div>`; 
-                return; 
-            }
             list.forEach(cls => {
                 let isFull = false;
-                if (cls.slots && cls.slots.includes('/')) {
-                    const parts = cls.slots.split('/');
-                    if(parseInt(parts[0], 10) >= parseInt(parts[1], 10)) isFull = true;
+                let slotsDisplay = cls.slots ? cls.slots.toString() : "0/0";
+                
+                if (slotsDisplay.includes('/')) {
+                    const parts = slotsDisplay.split('/');
+                    if(parseInt(parts[0], 10) >= parseInt(parts[1], 10)) {
+                        isFull = true;
+                    }
+                } else {
+                    slotsDisplay = "0/6"; 
                 }
+
+                let distanceText = "";
+                if (userCoords) {
+                    const classCoords = getCoordsFromArea(cls.area);
+                    if (classCoords) {
+                        const dist = getDistance(userCoords.lat, userCoords.lng, classCoords.lat, classCoords.lng);
+                        if (dist !== Infinity) {
+                            distanceText = `<br><strong style="color:#d97706;"><i class="fa-solid fa-route"></i> Cách bạn:</strong> ~${dist.toFixed(1)} km`;
+                        }
+                    }
+                }
+
                 const card = document.createElement('div');
                 card.className = 'course-card';
-                
-                let distanceHTML = '';
-                if (hasDistanceCalculated && cls.distance !== undefined && cls.distance !== null && !isNaN(cls.distance) && cls.distance !== Infinity) {
-                    const distanceKm = cls.distance.toFixed(2);
-                    distanceHTML = `<span class="distance-text"><i class="fa-solid fa-location-dot"></i> Cách đây: ${distanceKm} km</span>`;
-                }
-                
+                card.id = `card_${cls.id}`;
                 card.innerHTML = `
                     <div class="card-header">${cls.className}</div>
                     <div class="card-body">
                         Khu vực: ${cls.area}<br>
                         Trình độ: ${cls.level}<br>
                         Học phí: ${cls.fee}<br>
-                        Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br>
-                        HLV: ${cls.coach}
-                        ${distanceHTML}
+                        Số lượng: <span id="slot_${cls.id}">${slotsDisplay}</span><br>
+                        HLV: ${cls.coach} ${distanceText}
                     </div>
                     <div class="card-footer" id="footer_${cls.id}">
-                        ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="openRegisterPopup('${cls.id}')">Đăng ký</button>`)}
+                        ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="registerClass('${cls.id}', '${cls.className}', '${slotsDisplay}')">Đăng ký</button>`)}
                     </div>
                 `;
                 coursesContainer.appendChild(card);
             });
         }
 
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            if (lat1 === undefined || lon1 === undefined || lat2 === undefined || lon2 === undefined) return Infinity;
-            if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) return Infinity;
-            const R = 6371; 
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-        }
-
-        function getUserLocation() {
-            const btnText = document.getElementById('btnNearMeText');
-            const btnIcon = document.querySelector('#btnNearMe i');
-            
-            if (!navigator.geolocation) {
-                alert("Trình duyệt của bạn không hỗ trợ định vị vị trí!");
-                return;
-            }
-            btnText.innerText = "Đang định vị...";
-            btnIcon.className = "fa-solid fa-spinner fa-spin";
-
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    const userLat = position.coords.latitude;
-                    const userLon = position.coords.longitude;
-
-                    btnText.innerText = "Đã định vị";
-                    btnIcon.className = "fa-solid fa-location-dot";
-
-                    if (allClassesWithoutDistance && allClassesWithoutDistance.length > 0) {
-                        allLocalClasses = allClassesWithoutDistance.map(cls => {
-                            let cLat = parseFloat(cls.lat);
-                            let cLon = parseFloat(cls.lon);
-                            
-                            if (isNaN(cLat) || isNaN(cLon) || cLat === 0) {
-                                const areaNormalized = removeVietnameseTones(cls.area);
-                                for (let k in DISTRICT_COORDINATES) {
-                                    if (areaNormalized.indexOf(k) !== -1) { 
-                                        cLat = DISTRICT_COORDINATES[k].lat; 
-                                        cLon = DISTRICT_COORDINATES[k].lng; 
-                                        break; 
-                                    }
-                                }
-                            }
-                            const dist = calculateDistance(userLat, userLon, cLat, cLon);
-                            return { ...cls, distance: dist };
-                        });
-
-                        hasDistanceCalculated = true;
-
-                        const sortedClasses = [...allLocalClasses].sort((a, b) => {
-                            if (a.distance === Infinity) return 1;
-                            if (b.distance === Infinity) return -1;
-                            return a.distance - b.distance;
-                        });
-
-                        renderClasses(sortedClasses);
-                        alert("Đã tính khoảng cách và sắp xếp các lớp học gần bạn nhất!");
-                    }
-                },
-                function (error) {
-                    btnText.innerText = "Tìm gần tôi";
-                    btnIcon.className = "fa-solid fa-location-crosshairs";
-                    alert("Lỗi truy cập định vị thiết bị.");
-                },
-                { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-            );
-        }
-
-        function openRegisterPopup(classId) {
+        function registerClass(id, name, slots) {
             if (!loggedUser) return alert("Vui lòng đăng nhập tài khoản trước khi thực hiện thao tác này!");
-            
-            const cls = allLocalClasses.find(c => c.id === classId);
-            if (!cls) return;
+            if (!confirm(`Bạn có chắc chắn muốn đăng ký lớp: ${name}?`)) return;
 
-            const modalBody = document.getElementById('modalBodyContent');
-            modalBody.innerHTML = `<div style="text-align:center;padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang lấy hồ sơ huấn luyện viên...</div>`;
-            document.getElementById('registerModal').classList.add('open');
-
-            const callbackName = 'jsonp_coach_' + Date.now();
+            const callbackName = 'jsonp_reg_' + Date.now();
             window[callbackName] = function(data) {
                 delete window[callbackName];
                 document.getElementById(callbackName).remove();
-                
-                let coach = data.coach || {};
-                modalBody.innerHTML = `
-                    <div class="section-title"><i class="fa-solid fa-id-card"></i> Hồ sơ huấn luyện viên</div>
-                    <div class="coach-profile-wrapper">
-                        <img src="${coach.avatar || 'https://via.placeholder.com/90x110'}" class="coach-avatar" alt="Avatar HLV">
-                        <div class="coach-info">
-                            <strong>Họ và tên:</strong> ${cls.coach}<br>
-                            <strong>Tuổi:</strong> ${coach.age || 'N/A'}<br>
-                            <strong>Số điện thoại:</strong> ${coach.phone || 'N/A'}<br>
-                            <strong>Email:</strong> ${coach.email || 'N/A'}<br>
-                            <strong>Thời gian dạy:</strong> ${coach.teachingTime || 'N/A'}
-                        </div>
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <strong>Thành tích cá nhân:</strong><br>
-                        <div style="background:#f9f9f9; color:#333; padding:8px; border:1px solid #ddd; font-style:italic; margin-top:4px;">
-                            ${coach.achievements || 'Chưa cập nhật thành tích.'}
-                        </div>
-                    </div>
-                    <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> Thông tin lớp học đăng ký</div>
-                    <div>
-                        <strong>Tên lớp học:</strong> ${cls.className}<br>
-                        <strong>Khu vực:</strong> ${cls.area}<br>
-                        <strong>Trình độ yêu cầu:</strong> ${cls.level}<br>
-                        <strong>Học phí khóa học:</strong> <span style="color:#e11d48; font-weight:bold;">${cls.fee}</span>
-                    </div>
-                `;
-                
-                document.getElementById('btnSubmitRegistration').onclick = function() {
-                    executeRegistration(cls.id, cls.className, cls.coach, cls.slots);
-                };
-            };
+                if (data.status === "success") {
+                    alert("Chúc mừng! Bạn đã đăng ký thành công.");
+                    
+                    const parts = slots.split('/');
+                    const newSlots = (parseInt(parts[0], 10) + 1) + "/" + parts[1];
+                    
+                    const textElem = document.getElementById(`slot_${id}`);
+                    if(textElem) textElem.innerText = newSlots;
+                    
+                    const obj = allLocalClasses.find(c => c.id === id);
+                    if(obj) obj.slots = newSlots;
 
+                    if (parseInt(parts[0], 10) + 1 >= parseInt(parts[1], 10)) {
+                        const footerElem = document.getElementById(`footer_${id}`);
+                        if(footerElem) footerElem.innerHTML = '<button class="btn-register" disabled>Lớp đã full</button>';
+                    }
+                } else {
+                    alert(data.message);
+                }
+            };
             const script = document.createElement('script');
-            script.src = `${CONFIG.WEB_APP_URL}?action=get_coach_detail&coachName=${encodeURIComponent(cls.coach)}&callback=${callbackName}`;
+            script.src = `${CONFIG.WEB_APP_URL}?action=register_student&classId=${id}&className=${encodeURIComponent(name)}&studentName=${encodeURIComponent(loggedUser)}&callback=${callbackName}`;
             script.id = callbackName;
             document.body.appendChild(script);
         }
 
-        function closeModal() { document.getElementById('registerModal').classList.remove('open'); }
-        function scrollSlider(o) { coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); }
-        function switchTab(t, e) { document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active')); document.getElementById('tab-' + t).classList.add('active'); e.classList.add('active'); }
-        function toggleTheme() { document.body.classList.toggle('dark-theme'); }
-        
-        function executeRegistration(id, name, coachName, currentSlots) {
-            const btn = document.getElementById('btnSubmitRegistration');
-            btn.disabled = true; btn.innerText = `Đang xử lý...`;
-            const callbackName = 'jsonp_reg_' + Date.now();
-            window[callbackName] = function(data) {
-                delete window[callbackName]; document.getElementById(callbackName).remove();
-                btn.disabled = false; btn.innerText = `Đăng ký`;
-                if (data.status === "success") {
-                    alert("Đăng ký thành công!"); closeModal();
-                    const parts = currentSlots.split('/');
-                    const newCount = parseInt(parts[0], 10) + 1; const maxCount = parseInt(parts[1], 10);
-                    if(document.getElementById(`slot_${id}`)) document.getElementById(`slot_${id}`).innerText = `${newCount}/${maxCount}`;
-                } else { alert(data.message); }
-            };
-            const script = document.createElement('script');
-            script.src = `${CONFIG.WEB_APP_URL}?action=register_student&classId=${id}&className=${encodeURIComponent(name)}&studentName=${encodeURIComponent(loggedUser)}&coachName=${encodeURIComponent(coachName)}&callback=${callbackName}`;
-            script.id = callbackName; document.body.appendChild(script);
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const k = e.target.value.toLowerCase().trim();
+            const filtered = allLocalClasses.filter(c => 
+                c.className.toLowerCase().includes(k) || 
+                c.area.toLowerCase().includes(k) || 
+                c.coach.toLowerCase().includes(k)
+            );
+            renderClasses(filtered);
+        });
+
+        function scrollSlider(o) { 
+            coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); 
         }
-        
+
         window.onload = loadClasses;
     </script>
 </body>
