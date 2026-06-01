@@ -194,11 +194,10 @@
         const userRole = urlParams.get('role'); 
         const authNav = document.getElementById('authNav');
         const coursesContainer = document.getElementById('coursesContainer');
-        let allLocalClasses = [];
-        let originalClasses = []; // Lưu danh sách gốc (không có khoảng cách)
-        let currentDisplayList = []; // Danh sách hiện tại đang hiển thị
+        let allLocalClasses = []; // Danh sách toàn bộ lớp (luôn được cập nhật)
+        let originalClasses = []; // Deep copy của danh sách gốc
 
-        // Toạ độ dự phòng chuẩn hóa (đã tinh chỉnh match lỏng hơn)
+        // Toạ độ dự phòng chuẩn hóa
         const DISTRICT_COORDINATES = {
             "quan 1": { lat: 10.7760, lng: 106.7011 }, "quan 3": { lat: 10.7843, lng: 106.6812 },
             "quan 4": { lat: 10.7578, lng: 106.7067 }, "quan 5": { lat: 10.7541, lng: 106.6634 },
@@ -254,7 +253,7 @@
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const keyword = removeVietnameseTones(e.target.value);
-            const filtered = currentDisplayList.filter(cls => {
+            const filtered = allLocalClasses.filter(cls => {
                 const targetText = removeVietnameseTones(`${cls.className} ${cls.area} ${cls.coach}`);
                 return targetText.includes(keyword);
             });
@@ -267,10 +266,10 @@
                 delete window[callbackName];
                 document.getElementById(callbackName).remove();
                 if (data.status === "success") {
-                    originalClasses = JSON.parse(JSON.stringify(data.classes)); // Deep copy
-                    currentDisplayList = JSON.parse(JSON.stringify(data.classes)); // Deep copy
-                    allLocalClasses = data.classes;
-                    renderClasses(currentDisplayList);
+                    // Lưu danh sách gốc (deep copy)
+                    originalClasses = JSON.parse(JSON.stringify(data.classes));
+                    allLocalClasses = JSON.parse(JSON.stringify(data.classes));
+                    renderClasses(allLocalClasses);
                 }
             };
             const script = document.createElement('script');
@@ -294,7 +293,7 @@
                 const card = document.createElement('div');
                 card.className = 'course-card';
                 
-                // Kiểm tra xem có khoảng cách hay không (được thêm bởi getUserLocation)
+                // Kiểm tra và hiển thị khoảng cách
                 const distanceHtml = (cls.distance !== undefined && cls.distance !== null && cls.distance !== Infinity && !isNaN(cls.distance)) 
                     ? `<br><span style="color:#22c55e;font-weight:bold;display:inline-block;margin-top:6px;">📍 Cách đây: ${cls.distance.toFixed(1)} km</span>` 
                     : '';
@@ -350,16 +349,15 @@
                     btnIcon.className = "fa-solid fa-location-dot";
 
                     if (originalClasses && originalClasses.length > 0) {
-                        // Tính toán khoảng cách cho TẤT CẢ lớp học từ danh sách gốc
+                        // QUAN TRỌNG: Lấy từ originalClasses và tính toán khoảng cách cho TẤT CẢ
                         const classesWithDistance = originalClasses.map(cls => {
                             let cLat = parseFloat(cls.lat);
                             let cLon = parseFloat(cls.lon);
                             
-                            // Nếu không có tọa độ cứng, bóc tách chuỗi Area để lấy dữ liệu Quận
+                            // Nếu không có tọa độ cứng, lấy từ tên area
                             if (isNaN(cLat) || isNaN(cLon) || cLat === 0) {
                                 const areaNormalized = removeVietnameseTones(cls.area);
                                 for (let k in DISTRICT_COORDINATES) {
-                                    // Kiểm tra xem chuỗi Area có chứa tên quận/huyện tương ứng không
                                     if (areaNormalized.indexOf(k) !== -1) { 
                                         cLat = DISTRICT_COORDINATES[k].lat; 
                                         cLon = DISTRICT_COORDINATES[k].lng; 
@@ -371,15 +369,15 @@
                             return { ...cls, distance: dist };
                         });
 
-                        // Sắp xếp danh sách theo khoảng cách
+                        // Sắp xếp theo khoảng cách
                         const sortedClasses = [...classesWithDistance].sort((a, b) => {
                             if (a.distance === Infinity) return 1;
                             if (b.distance === Infinity) return -1;
                             return a.distance - b.distance;
                         });
 
-                        // Lưu danh sách hiện tại và hiển thị
-                        currentDisplayList = sortedClasses;
+                        // CẬP NHẬT allLocalClasses và render
+                        allLocalClasses = sortedClasses;
                         renderClasses(sortedClasses);
                         alert("Đã tính khoảng cách và sắp xếp các lớp học gần bạn nhất!");
                     }
