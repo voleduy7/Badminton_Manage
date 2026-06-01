@@ -82,7 +82,7 @@
         .slider-wrapper { display: flex; justify-content: center; width: 100%; margin-top: 20px; }
         .slider-section { display: flex; align-items: center; gap: 15px; max-width: 100%; }
         
-        /* FIXED: Giữ nguyên kích thước chiều cao tối thiểu cho thẻ danh sách kể cả khi rỗng dữ liệu */
+        /* Đảm bảo vùng chứa không bị sụt giảm độ cao khi danh sách rỗng */
         .courses-container { 
             display: flex; 
             gap: 20px; 
@@ -110,15 +110,16 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay-color); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
         .modal-overlay.open { opacity: 1; pointer-events: auto; }
         .modal-box { background-color: var(--card-bg); border: 4px solid var(--border-color); box-shadow: 8px 8px 0px var(--shadow-color); width: 550px; max-width: 90%; transform: scale(0.9); transition: transform 0.2s ease; display: flex; flex-direction: column; }
+        .modal-overlay.open .modal-box { transform: scale(1); }
         .modal-header { background-color: var(--modal-header-bg); color: var(--text-color); padding: 15px; font-size: 20px; font-weight: bold; border-bottom: 4px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; line-height: 1.5; font-size: 15px; }
+        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; line-height: 1.5; font-size: 15px; color: var(--text-color); }
         .modal-footer { padding: 15px; border-top: 2px dashed var(--border-color); display: flex; justify-content: flex-end; gap: 12px; background-color: var(--card-header-bg); }
         .coach-profile-wrapper { display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px dashed var(--border-color); }
         .coach-avatar { width: 90px; height: 110px; border: 2px solid var(--border-color); box-shadow: 3px 3px 0px var(--shadow-color); object-fit: cover; }
+        .coach-info { flex: 1; color: var(--text-color); }
         .section-title { font-weight: bold; text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; background-color: var(--hover-bg); color: var(--hover-text); padding: 2px 6px; display: inline-block; margin-bottom: 8px; }
         .btn-modal-confirm { background-color: #22c55e !important; color: white !important; }
         
-        /* Khung hiển thị rỗng có kích thước đồng bộ */
         .no-result-placeholder { padding: 20px; font-weight: bold; width: 100%; text-align: center; color: #888888; line-height: 200px; }
     </style>
 </head>
@@ -161,7 +162,7 @@
                     <svg viewBox="0 0 100 100"><polygon points="80,10 20,50 80,90 70,50"/></svg>
                 </button>
                 <div class="courses-container" id="coursesContainer">
-                    <div style="padding: 20px; font-weight: bold;">Đang tải danh sách lớp...</div>
+                    <div style="padding: 20px; font-weight: bold;">Đang tải danh sách lớp từ hệ thống...</div>
                 </div>
                 <button class="arrow-btn" onclick="scrollSlider(276)">
                     <svg viewBox="0 0 100 100"><polygon points="20,10 80,50 20,90 30,50"/></svg>
@@ -170,14 +171,20 @@
         </div>
     </div>
 
-    <div id="tab-courts" class="content-section"><div class="empty-tab-content">Tính năng Tìm sân đang phát triển...</div></div>
-    <div id="tab-casual" class="content-section"><div class="empty-tab-content">Tính năng Vãng lai đang phát triển...</div></div>
+    <div id="tab-courts" class="content-section"><div class="empty-tab-content">Tính năng Tìm kiếm Sân cầu đang phát triển...</div></div>
+    <div id="tab-casual" class="content-section"><div class="empty-tab-content">Tính năng Tìm nhóm Vãng lai đang phát triển...</div></div>
 
     <div class="modal-overlay" id="registerModal">
         <div class="modal-box">
-            <div class="modal-header"><span>XÁC NHẬN ĐĂNG KÝ HỌC</span><i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeModal()"></i></div>
+            <div class="modal-header">
+                <span>XÁC NHẬN ĐĂNG KÝ HỌC</span>
+                <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeModal()"></i>
+            </div>
             <div class="modal-body" id="modalBodyContent"></div>
-            <div class="modal-footer"><button class="btn-modal-close" onclick="closeModal()">Hủy</button><button class="btn-modal-confirm" id="btnSubmitRegistration">Đăng ký</button></div>
+            <div class="modal-footer">
+                <button class="btn-modal-close" onclick="closeModal()">Hủy bỏ</button>
+                <button class="btn-modal-confirm" id="btnSubmitRegistration">Đăng ký</button>
+            </div>
         </div>
     </div>
 
@@ -190,32 +197,51 @@
         const coursesContainer = document.getElementById('coursesContainer');
         let allLocalClasses = [];
 
+        // Dữ liệu mốc toạ độ tĩnh cho các Quận huyện tại TP.HCM
         const DISTRICT_COORDINATES = {
-            "quận 1": { lat: 10.7760, lng: 106.7011 }, "quận 3": { lat: 10.7843, lng: 106.6812 },
-            "quận 4": { lat: 10.7578, lng: 106.7067 }, "quận 5": { lat: 10.7541, lng: 106.6634 },
-            "quận 6": { lat: 10.7481, lng: 106.6413 }, "quận 7": { lat: 10.7340, lng: 106.7214 },
-            "quận 8": { lat: 10.7240, lng: 106.6286 }, "quận 10": { lat: 10.7746, lng: 106.6669 },
-            "quận 11": { lat: 10.7629, lng: 106.6507 }, "quận 12": { lat: 10.8671, lng: 106.6413 },
-            "bình thạnh": { lat: 10.8106, lng: 106.7091 }, "gò vấp": { lat: 10.8388, lng: 106.6657 },
-            "tân bình": { lat: 10.8014, lng: 106.6525 }, "tân phú": { lat: 10.7925, lng: 106.6183 },
-            "bình tân": { lat: 10.7654, lng: 106.5815 }, "phú nhuận": { lat: 10.7992, lng: 106.6803 },
-            "thủ đức": { lat: 10.8494, lng: 106.7537 }, "nhà bè": { lat: 10.6662, lng: 106.7461 },
-            "bình chánh": { lat: 10.6875, lng: 106.5938 }, "hóc môn": { lat: 10.8842, lng: 106.5920 }
+            "quan 1": { lat: 10.7760, lng: 106.7011 }, "quan 3": { lat: 10.7843, lng: 106.6812 },
+            "quan 4": { lat: 10.7578, lng: 106.7067 }, "quan 5": { lat: 10.7541, lng: 106.6634 },
+            "quan 6": { lat: 10.7481, lng: 106.6413 }, "quan 7": { lat: 10.7340, lng: 106.7214 },
+            "quan 8": { lat: 10.7240, lng: 106.6286 }, "quan 10": { lat: 10.7746, lng: 106.6669 },
+            "quan 11": { lat: 10.7629, lng: 106.6507 }, "quan 12": { lat: 10.8671, lng: 106.6413 },
+            "binh thanh": { lat: 10.8106, lng: 106.7091 }, "go vap": { lat: 10.8388, lng: 106.6657 },
+            "tan binh": { lat: 10.8014, lng: 106.6525 }, "tan phu": { lat: 10.7925, lng: 106.6183 },
+            "binh tan": { lat: 10.7654, lng: 106.5815 }, "phu nhuan": { lat: 10.7992, lng: 106.6803 },
+            "thu duc": { lat: 10.8494, lng: 106.7537 }, "nha be": { lat: 10.6662, lng: 106.7461 },
+            "binh chanh": { lat: 10.6875, lng: 106.5938 }, "hoc mon": { lat: 10.8842, lng: 106.5920 }
         };
 
         if (loggedUser) {
-            let userHtml = `<div class="user-container"><div class="user-header-row"><span class="user-logged"><i class="fa-solid fa-user"></i> ${decodeURIComponent(loggedUser)}</span>`;
+            let userHtml = `
+                <div class="user-container">
+                    <div class="user-header-row">
+                        <span class="user-logged"><i class="fa-solid fa-user"></i> Xin chào, ${decodeURIComponent(loggedUser)}</span>
+            `;
             if (userRole === 'coach') {
-                userHtml += `<button class="noti-bell-btn" id="notiBellBtn" onclick="toggleNotiDropdown(event)"><i class="fa-solid fa-bell"></i><span class="noti-badge" id="notiBadgeCount" style="display:none;">0</span></button><div class="noti-dropdown" id="notiDropdownMenu"><div class="noti-dropdown-header"><span>Thông báo</span><span style="cursor:pointer;color:#ef4444;" onclick="toggleNotiDropdown(event)">Đóng</span></div><div id="notiDropdownContent"></div></div>`;
+                userHtml += `
+                        <button class="noti-bell-btn" id="notiBellBtn" onclick="toggleNotiDropdown(event)">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="noti-badge" id="notiBadgeCount" style="display:none;">0</span>
+                        </button>
+                        <div class="noti-dropdown" id="notiDropdownMenu" onclick="event.stopPropagation()">
+                            <div class="noti-dropdown-header">
+                                <span>Thông báo mới nhận</span>
+                                <span style="cursor:pointer;color:#ef4444;" onclick="toggleNotiDropdown(event)">Đóng</span>
+                            </div>
+                            <div id="notiDropdownContent"><div class="noti-dropdown-empty">Đang tải thông báo...</div></div>
+                        </div>
+                `;
             }
-            userHtml += `</div><div style="display: flex; gap: 8px;">`;
-            if (userRole === 'coach') userHtml += `<a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a><a href="manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Lớp của tôi</a>`;
+            userHtml += `</div><div style="display: flex; gap: 8px; align-items: center;">`;
+            if (userRole === 'coach') {
+                userHtml += `<a href="dashboard_hlv.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Mở lớp</a><a href="manage_classes.html?user=${encodeURIComponent(loggedUser)}&role=coach" class="btn-open-class">Lớp của tôi</a>`;
+            }
             userHtml += `<a href="index.html" class="btn-logout">Đăng xuất</a></div></div>`;
             authNav.innerHTML = userHtml;
             if (userRole === 'coach') loadNotificationsCount();
         }
 
-        // FIXED: Hàm chuẩn hoá chuỗi loại bỏ dấu tiếng Việt phục vụ so khớp gần đúng
+        // Loại bỏ dấu Tiếng Việt 
         function removeVietnameseTones(str) {
             if (!str) return "";
             return str.normalize("NFD")
@@ -226,10 +252,9 @@
                       .trim();
         }
 
-        // Logic Tìm kiếm so khớp gần đúng (FIXED)
+        // Xử lý Tìm kiếm So khớp gần đúng
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const keyword = removeVietnameseTones(e.target.value);
-            
             const filtered = allLocalClasses.filter(cls => {
                 const targetText = removeVietnameseTones(`${cls.className} ${cls.area} ${cls.coach}`);
                 return targetText.includes(keyword);
@@ -241,38 +266,44 @@
             const callbackName = 'jsonp_load_' + Date.now();
             window[callbackName] = function(data) {
                 delete window[callbackName];
-                if (data.status === "success") { allLocalClasses = data.classes; renderClasses(allLocalClasses); }
+                document.getElementById(callbackName).remove();
+                if (data.status === "success") {
+                    allLocalClasses = data.classes;
+                    renderClasses(allLocalClasses);
+                }
             };
             const script = document.createElement('script');
             script.src = `${CONFIG.WEB_APP_URL}?action=get_classes&callback=${callbackName}`;
+            script.id = callbackName;
             document.body.appendChild(script);
         }
 
         function renderClasses(list) {
             coursesContainer.innerHTML = "";
-            
-            // FIXED: Nếu không tìm thấy, chèn khối giữ chỗ có khoảng cao cố định tránh trồi sụt UI
             if (list.length === 0) { 
                 coursesContainer.innerHTML = `<div class="no-result-placeholder">Không tìm thấy lớp học phù hợp.</div>`; 
                 return; 
             }
-            
             list.forEach(cls => {
                 let isFull = false;
                 if (cls.slots && cls.slots.includes('/')) {
                     const parts = cls.slots.split('/');
-                    if(parseInt(parts[0]) >= parseInt(parts[1])) isFull = true;
+                    if(parseInt(parts[0], 10) >= parseInt(parts[1], 10)) isFull = true;
                 }
                 const card = document.createElement('div');
                 card.className = 'course-card';
                 card.innerHTML = `
                     <div class="card-header">${cls.className}</div>
                     <div class="card-body">
-                        Khu vực: ${cls.area}<br> Trình độ: ${cls.level}<br> Học phí: ${cls.fee}<br> Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br> HLV: ${cls.coach}
-                        ${cls.distance !== undefined && cls.distance !== Infinity ? `<br><span style="color:#22c55e;font-weight:bold;"><i class="fa-solid fa-location-dot"></i> Cách đây: ${cls.distance.toFixed(1)} km</span>` : ''}
+                        Khu vực: ${cls.area}<br>
+                        Trình độ: ${cls.level}<br>
+                        Học phí: ${cls.fee}<br>
+                        Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br>
+                        HLV: ${cls.coach}
+                        ${cls.distance !== undefined && cls.distance !== null && cls.distance !== Infinity ? `<br><span style="color:#22c55e;font-weight:bold;display:inline-block;margin-top:4px;"><i class="fa-solid fa-location-dot"></i> Cách đây: ${cls.distance.toFixed(1)} km</span>` : ''}
                     </div>
                     <div class="card-footer" id="footer_${cls.id}">
-                        ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Full</button>' : `<button class="btn-register" onclick="openRegisterPopup('${cls.id}')">Đăng ký</button>`)}
+                        ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="openRegisterPopup('${cls.id}')">Đăng ký</button>`)}
                     </div>
                 `;
                 coursesContainer.appendChild(card);
@@ -280,42 +311,148 @@
         }
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; const dLat = (lat2 - lat1) * Math.PI / 180; const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
-            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity;
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
         }
 
         function getUserLocation() {
             const btnText = document.getElementById('btnNearMeText');
-            if (!navigator.geolocation) return alert("Không hỗ trợ định vị.");
+            const btnIcon = document.querySelector('#btnNearMe i');
+            
+            if (!navigator.geolocation) {
+                alert("Trình duyệt của bạn không hỗ trợ định vị vị trí!");
+                return;
+            }
             btnText.innerText = "Đang định vị...";
-            navigator.geolocation.getCurrentPosition((pos) => {
-                const { latitude: uLat, longitude: uLon } = pos.coords;
-                btnText.innerText = "Đã định vị";
-                
-                const sorted = allLocalClasses.map(cls => {
-                    let cLat = parseFloat(cls.lat), cLon = parseFloat(cls.lon);
-                    if (isNaN(cLat)) {
-                        const areaNormalized = removeVietnameseTones(cls.area);
-                        for (let k in DISTRICT_COORDINATES) {
-                            if (areaNormalized.includes(k)) { 
-                                cLat = DISTRICT_COORDINATES[k].lat; 
-                                cLon = DISTRICT_COORDINATES[k].lng; 
-                                break; 
+            btnIcon.className = "fa-solid fa-spinner fa-spin";
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const userLat = position.coords.latitude;
+                    const userLon = position.coords.longitude;
+
+                    btnText.innerText = "Đã định vị";
+                    btnIcon.className = "fa-solid fa-location-dot";
+
+                    if (allLocalClasses && allLocalClasses.length > 0) {
+                        const sortedClasses = allLocalClasses.map(cls => {
+                            let cLat = parseFloat(cls.lat);
+                            let cLon = parseFloat(cls.lon);
+                            
+                            // Nếu cột Lat/Lon trên dữ liệu bị trống, tiến hành lấy tọa độ dựa trên chuỗi Area dịch không dấu
+                            if (isNaN(cLat) || isNaN(cLon)) {
+                                const areaNormalized = removeVietnameseTones(cls.area);
+                                for (let k in DISTRICT_COORDINATES) {
+                                    if (areaNormalized.includes(k)) { 
+                                        cLat = DISTRICT_COORDINATES[k].lat; 
+                                        cLon = DISTRICT_COORDINATES[k].lng; 
+                                        break; 
+                                    }
+                                }
                             }
-                        }
+                            const dist = calculateDistance(userLat, userLon, cLat, cLon);
+                            return { ...cls, distance: dist };
+                        }).sort((a, b) => a.distance - b.distance);
+
+                        renderClasses(sortedClasses);
+                        alert("Đã sắp xếp các lớp học gần bạn nhất thành công!");
                     }
-                    return { ...cls, distance: calculateDistance(uLat, uLon, cLat, cLon) };
-                }).sort((a, b) => a.distance - b.distance);
-                renderClasses(sorted);
-            }, () => { btnText.innerText = "Tìm gần tôi"; alert("Lỗi định vị."); });
+                },
+                function (error) {
+                    btnText.innerText = "Tìm gần tôi";
+                    btnIcon.className = "fa-solid fa-location-crosshairs";
+                    alert("Lỗi truy cập định vị thiết bị.");
+                },
+                { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+            );
         }
 
-        function openRegisterPopup(id) { /* Giữ nguyên logic cũ */ }
+        // HÀM POPUP GỌI CHI TIẾT HỒ SƠ TỪ BACKEND (ĐÃ PHỤC HỒI)
+        function openRegisterPopup(classId) {
+            if (!loggedUser) return alert("Vui lòng đăng nhập tài khoản trước khi thực hiện thao tác này!");
+            
+            const cls = allLocalClasses.find(c => c.id === classId);
+            if (!cls) return;
+
+            const modalBody = document.getElementById('modalBodyContent');
+            modalBody.innerHTML = `<div style="text-align:center;padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang lấy hồ sơ huấn luyện viên...</div>`;
+            document.getElementById('registerModal').classList.add('open');
+
+            const callbackName = 'jsonp_coach_' + Date.now();
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                document.getElementById(callbackName).remove();
+                
+                let coach = data.coach || {};
+                modalBody.innerHTML = `
+                    <div class="section-title"><i class="fa-solid fa-id-card"></i> Hồ sơ huấn luyện viên</div>
+                    <div class="coach-profile-wrapper">
+                        <img src="${coach.avatar || 'https://via.placeholder.com/90x110'}" class="coach-avatar" alt="Avatar HLV">
+                        <div class="coach-info">
+                            <strong>Họ và tên:</strong> ${cls.coach}<br>
+                            <strong>Tuổi:</strong> ${coach.age || 'N/A'}<br>
+                            <strong>Số điện thoại:</strong> ${coach.phone || 'N/A'}<br>
+                            <strong>Email:</strong> ${coach.email || 'N/A'}<br>
+                            <strong>Thời gian dạy:</strong> ${coach.teachingTime || 'N/A'}
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Thành tích cá nhân:</strong><br>
+                        <div style="background:#f9f9f9; color:#333; padding:8px; border:1px solid #ddd; font-style:italic; margin-top:4px;">
+                            ${coach.achievements || 'Chưa cập nhật thành tích.'}
+                        </div>
+                    </div>
+                    <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> Thông tin lớp học đăng ký</div>
+                    <div>
+                        <strong>Tên lớp học:</strong> ${cls.className}<br>
+                        <strong>Khu vực:</strong> ${cls.area}<br>
+                        <strong>Trình độ yêu cầu:</strong> ${cls.level}<br>
+                        <strong>Học phí khóa học:</strong> <span style="color:#e11d48; font-weight:bold;">${cls.fee}</span>
+                    </div>
+                `;
+                
+                document.getElementById('btnSubmitRegistration').onclick = function() {
+                    executeRegistration(cls.id, cls.className, cls.coach, cls.slots);
+                };
+            };
+
+            const script = document.createElement('script');
+            script.src = `${CONFIG.WEB_APP_URL}?action=get_coach_detail&coachName=${encodeURIComponent(cls.coach)}&callback=${callbackName}`;
+            script.id = callbackName;
+            document.body.appendChild(script);
+        }
+
         function closeModal() { document.getElementById('registerModal').classList.remove('open'); }
         function scrollSlider(o) { coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); }
         function switchTab(t, e) { document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active')); e.classList.add('active'); document.getElementById(`tab-${t}`).classList.add('active'); }
         function toggleTheme() { document.body.classList.toggle('dark-theme'); }
+        
+        function executeRegistration(id, name, coachName, currentSlots) {
+            const btn = document.getElementById('btnSubmitRegistration');
+            btn.disabled = true; btn.innerText = `Đang xử lý...`;
+            const callbackName = 'jsonp_reg_' + Date.now();
+            window[callbackName] = function(data) {
+                delete window[callbackName]; document.getElementById(callbackName).remove();
+                btn.disabled = false; btn.innerText = `Đăng ký`;
+                if (data.status === "success") {
+                    alert("Đăng ký thành công!"); closeModal();
+                    const parts = currentSlots.split('/');
+                    const newCount = parseInt(parts[0], 10) + 1; const maxCount = parseInt(parts[1], 10);
+                    if(document.getElementById(`slot_${id}`)) document.getElementById(`slot_${id}`).innerText = `${newCount}/${maxCount}`;
+                } else { alert(data.message); }
+            };
+            const script = document.createElement('script');
+            script.src = `${CONFIG.WEB_APP_URL}?action=register_student&classId=${id}&className=${encodeURIComponent(name)}&studentName=${encodeURIComponent(loggedUser)}&coachName=${encodeURIComponent(coachName)}&callback=${callbackName}`;
+            script.id = callbackName; document.body.appendChild(script);
+        }
+        
         window.onload = loadClasses;
     </script>
 </body>
