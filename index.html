@@ -195,7 +195,8 @@
         const authNav = document.getElementById('authNav');
         const coursesContainer = document.getElementById('coursesContainer');
         let allLocalClasses = [];
-        let allClassesWithoutDistance = []; // Lưu danh sách gốc để không mất dữ liệu
+        let originalClasses = []; // Lưu danh sách gốc (không có khoảng cách)
+        let currentDisplayList = []; // Danh sách hiện tại đang hiển thị
 
         // Toạ độ dự phòng chuẩn hóa (đã tinh chỉnh match lỏng hơn)
         const DISTRICT_COORDINATES = {
@@ -253,9 +254,7 @@
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const keyword = removeVietnameseTones(e.target.value);
-            // Nếu có khoảng cách (đã click "Tìm gần tôi"), sử dụng allLocalClasses; nếu không, sử dụng allClassesWithoutDistance
-            const sourceList = allLocalClasses.some(cls => cls.distance !== undefined) ? allLocalClasses : allClassesWithoutDistance;
-            const filtered = sourceList.filter(cls => {
+            const filtered = currentDisplayList.filter(cls => {
                 const targetText = removeVietnameseTones(`${cls.className} ${cls.area} ${cls.coach}`);
                 return targetText.includes(keyword);
             });
@@ -268,9 +267,10 @@
                 delete window[callbackName];
                 document.getElementById(callbackName).remove();
                 if (data.status === "success") {
+                    originalClasses = JSON.parse(JSON.stringify(data.classes)); // Deep copy
+                    currentDisplayList = JSON.parse(JSON.stringify(data.classes)); // Deep copy
                     allLocalClasses = data.classes;
-                    allClassesWithoutDistance = [...data.classes]; // Lưu danh sách gốc
-                    renderClasses(allLocalClasses);
+                    renderClasses(currentDisplayList);
                 }
             };
             const script = document.createElement('script');
@@ -293,6 +293,12 @@
                 }
                 const card = document.createElement('div');
                 card.className = 'course-card';
+                
+                // Kiểm tra xem có khoảng cách hay không (được thêm bởi getUserLocation)
+                const distanceHtml = (cls.distance !== undefined && cls.distance !== null && cls.distance !== Infinity && !isNaN(cls.distance)) 
+                    ? `<br><span style="color:#22c55e;font-weight:bold;display:inline-block;margin-top:6px;">📍 Cách đây: ${cls.distance.toFixed(1)} km</span>` 
+                    : '';
+                
                 card.innerHTML = `
                     <div class="card-header">${cls.className}</div>
                     <div class="card-body">
@@ -301,7 +307,7 @@
                         Học phí: ${cls.fee}<br>
                         Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br>
                         HLV: ${cls.coach}
-                        ${cls.distance !== undefined && cls.distance !== null && cls.distance !== Infinity && !isNaN(cls.distance) ? `<br><span style="color:#22c55e;font-weight:bold;display:inline-block;margin-top:6px;">📍 Cách đây: ${cls.distance.toFixed(1)} km</span>` : ''}
+                        ${distanceHtml}
                     </div>
                     <div class="card-footer" id="footer_${cls.id}">
                         ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="openRegisterPopup('${cls.id}')">Đăng ký</button>`)}
@@ -343,9 +349,9 @@
                     btnText.innerText = "Đã định vị";
                     btnIcon.className = "fa-solid fa-location-dot";
 
-                    if (allClassesWithoutDistance && allClassesWithoutDistance.length > 0) {
-                        // Tính toán khoảng cách cho TẤT CẢ lớp học
-                        allLocalClasses = allClassesWithoutDistance.map(cls => {
+                    if (originalClasses && originalClasses.length > 0) {
+                        // Tính toán khoảng cách cho TẤT CẢ lớp học từ danh sách gốc
+                        const classesWithDistance = originalClasses.map(cls => {
                             let cLat = parseFloat(cls.lat);
                             let cLon = parseFloat(cls.lon);
                             
@@ -366,13 +372,14 @@
                         });
 
                         // Sắp xếp danh sách theo khoảng cách
-                        const sortedClasses = [...allLocalClasses].sort((a, b) => {
+                        const sortedClasses = [...classesWithDistance].sort((a, b) => {
                             if (a.distance === Infinity) return 1;
                             if (b.distance === Infinity) return -1;
                             return a.distance - b.distance;
                         });
 
-                        // Hiển thị tất cả lớp đã sắp xếp
+                        // Lưu danh sách hiện tại và hiển thị
+                        currentDisplayList = sortedClasses;
                         renderClasses(sortedClasses);
                         alert("Đã tính khoảng cách và sắp xếp các lớp học gần bạn nhất!");
                     }
