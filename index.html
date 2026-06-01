@@ -628,6 +628,7 @@
             document.body.appendChild(script);
         }
 
+        /* HÀM RENDER ĐÃ ĐƯỢC CẬP NHẬT: Thêm dòng kiểm tra khoảng cách hiển thị động */
         function renderClasses(list) {
             coursesContainer.innerHTML = "";
             if (list.length === 0) {
@@ -650,7 +651,7 @@
                         Học phí: ${cls.fee}<br>
                         Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br>
                         HLV: ${cls.coach}
-                        ${cls.distance && cls.distance !== Infinity ? `<br><span style="color:#22c55e;font-weight:bold;"><i class="fa-solid fa-location-dot"></i> Cách đây: ${cls.distance.toFixed(1)} km</span>` : ''}
+                        ${cls.distance !== undefined && cls.distance !== null && cls.distance !== Infinity ? `<br><span style="color:#22c55e;font-weight:bold;display:inline-block;margin-top:4px;"><i class="fa-solid fa-location-dot"></i> Cách đây: ${cls.distance.toFixed(1)} km</span>` : ''}
                     </div>
                     <div class="card-footer" id="footer_${cls.id}">
                         ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="openRegisterPopup('${cls.id}')">Đăng ký</button>`)}
@@ -660,7 +661,6 @@
             });
         }
 
-        /* LOGIC ĐỊNH VỊ TOÀN DIỆN - TÍNH KHOẢNG CÁCH HAVERSINE & SẮP XẾP LỚP HỌC */
         function calculateDistance(lat1, lon1, lat2, lon2) {
             if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity;
             const R = 6371; 
@@ -836,7 +836,6 @@
             document.getElementById(`tab-${t}`).classList.add('active');
         }
 
-        /* ĐĂNG KÝ TÍNH NĂNG DARK MODE (Tối ưu đổi icon mặt trăng / mặt trời phù hợp theme) */
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
             const icon = document.querySelector('#themeToggle i');
