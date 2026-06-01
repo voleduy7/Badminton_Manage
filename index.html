@@ -426,7 +426,10 @@
         <div class="search-container">
             <div class="search-label">Tìm kiếm lớp:</div>
             <input type="text" class="search-input" id="searchInput" placeholder="Nhập khu vực, tên lớp hoặc huấn luyện viên...">
-            <button class="btn-near-me"><i class="fa-solid fa-location-crosshairs"></i> Đã định vị</button>
+            
+            <button class="btn-near-me" id="btnNearMe" onclick="getUserLocation()">
+                <i class="fa-solid fa-location-crosshairs"></i> <span id="btnNearMeText">Tìm gần tôi</span>
+            </button>
         </div>
 
         <div class="slider-wrapper">
@@ -452,7 +455,6 @@
         <div class="empty-tab-content">Tính năng Tìm nhóm Vãng lai đang phát triển...</div>
     </div>
 
-    <!-- POPUP MODAL ĐĂNG KÝ HỌC -->
     <div class="modal-overlay" id="registerModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -569,7 +571,6 @@
             document.body.appendChild(script);
         }
 
-        // ĐÓNG MỞ POPUP THÔNG BÁO VÀ XỬ LÝ ĐỌC THỜI GIAN THỰC
         function toggleNotiDropdown(event) {
             if (event) event.stopPropagation();
             const menu = document.getElementById('notiDropdownMenu');
@@ -578,7 +579,6 @@
             menu.classList.toggle('show');
             
             if (menu.classList.contains('show')) {
-                // 1. NGAY LẬP TỨC TRÊN UI: Ẩn số đếm chuông và xóa highlight của các mục thông báo
                 const badge = document.getElementById('notiBadgeCount');
                 if (badge) badge.style.display = 'none';
                 
@@ -586,12 +586,10 @@
                     item.classList.remove('unread');
                 });
 
-                // 2. BACKEND API CALL: Gửi lệnh ngầm cập nhật trạng thái "read" lên Google Sheets
                 markAllNotificationsAsReadOnBackend();
             }
         }
 
-        // HÀM GỌI API ĐÁNH DẤU ĐÃ ĐỌC TRÊN SHEET
         function markAllNotificationsAsReadOnBackend() {
             if (!loggedUser || userRole !== 'coach') return;
 
@@ -599,7 +597,6 @@
             window[callbackName] = function(data) {
                 delete window[callbackName];
                 document.getElementById(callbackName).remove();
-                // Đã xử lý đồng bộ xong trên Database (Google Sheets) thành công mà không làm gián đoạn UI
             };
 
             const script = document.createElement('script');
@@ -633,6 +630,10 @@
 
         function renderClasses(list) {
             coursesContainer.innerHTML = "";
+            if (list.length === 0) {
+                coursesContainer.innerHTML = `<div style="padding: 20px; font-weight: bold;">Không tìm thấy lớp học nào phù hợp.</div>`;
+                return;
+            }
             list.forEach(cls => {
                 let isFull = false;
                 if (cls.slots && cls.slots.includes('/')) {
@@ -649,6 +650,7 @@
                         Học phí: ${cls.fee}<br>
                         Số lượng: <span id="slot_${cls.id}">${cls.slots}</span><br>
                         HLV: ${cls.coach}
+                        ${cls.distance && cls.distance !== Infinity ? `<br><span style="color:#22c55e;font-weight:bold;"><i class="fa-solid fa-location-dot"></i> Cách đây: ${cls.distance.toFixed(1)} km</span>` : ''}
                     </div>
                     <div class="card-footer" id="footer_${cls.id}">
                         ${userRole === 'coach' ? '' : (isFull ? '<button class="btn-register" disabled>Lớp đã full</button>' : `<button class="btn-register" onclick="openRegisterPopup('${cls.id}')">Đăng ký</button>`)}
@@ -656,6 +658,71 @@
                 `;
                 coursesContainer.appendChild(card);
             });
+        }
+
+        /* LOGIC ĐỊNH VỊ TOÀN DIỆN - TÍNH KHOẢNG CÁCH HAVERSINE & SẮP XẾP LỚP HỌC */
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity;
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function getUserLocation() {
+            const btnText = document.getElementById('btnNearMeText');
+            const btnIcon = document.querySelector('#btnNearMe i');
+            
+            if (!navigator.geolocation) {
+                alert("Trình duyệt của bạn không hỗ trợ định vị vị trí!");
+                return;
+            }
+
+            btnText.innerText = "Đang định vị...";
+            btnIcon.className = "fa-solid fa-spinner fa-spin";
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const userLat = position.coords.latitude;
+                    const userLon = position.coords.longitude;
+
+                    btnText.innerText = "Đã định vị";
+                    btnIcon.className = "fa-solid fa-location-dot";
+
+                    if (allLocalClasses && allLocalClasses.length > 0) {
+                        const sortedClasses = allLocalClasses.map(cls => {
+                            const dist = calculateDistance(userLat, userLon, parseFloat(cls.lat), parseFloat(cls.lon));
+                            return { ...cls, distance: dist };
+                        }).sort((a, b) => a.distance - b.distance);
+
+                        renderClasses(sortedClasses);
+                        alert("Đã sắp xếp các lớp học gần bạn nhất thành công!");
+                    }
+                },
+                function (error) {
+                    btnText.innerText = "Tìm gần tôi";
+                    btnIcon.className = "fa-solid fa-location-crosshairs";
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            alert("Bạn đã từ chối cấp quyền định vị. Vui lòng bật lại trong cài đặt trình duyệt.");
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            alert("Không tìm thấy tín hiệu vị trí từ thiết bị của bạn.");
+                            break;
+                        case error.TIMEOUT:
+                            alert("Thời gian yêu cầu vị trí bị hết hạn.");
+                            break;
+                        default:
+                            alert("Lỗi định vị không xác định.");
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+            );
         }
 
         function openRegisterPopup(classId) {
@@ -761,12 +828,25 @@
         }
 
         function scrollSlider(o) { coursesContainer.scrollBy({ left: o, behavior: 'smooth' }); }
+        
         function switchTab(t, e) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             e.classList.add('active');
             document.getElementById(`tab-${t}`).classList.add('active');
         }
+
+        /* ĐĂNG KÝ TÍNH NĂNG DARK MODE (Tối ưu đổi icon mặt trăng / mặt trời phù hợp theme) */
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const icon = document.querySelector('#themeToggle i');
+            if (document.body.classList.contains('dark-theme')) {
+                icon.className = "fa-solid fa-sun";
+            } else {
+                icon.className = "fa-solid fa-moon";
+            }
+        }
+
         window.onload = loadClasses;
     </script>
 </body>
